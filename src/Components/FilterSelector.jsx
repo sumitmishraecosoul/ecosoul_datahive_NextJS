@@ -46,7 +46,7 @@ const FilterSelector = ({
             <label className='text-sm font-medium text-gray-700 mb-2'>{filter.label}</label>
             <input
               type='text'
-              className='border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='border border-gray-300 rounded-lg px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder={filter.placeholder}
               value={selectedFilters[filter.key]?.value || ''}
               onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}

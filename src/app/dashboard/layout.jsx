@@ -10,12 +10,12 @@ export default function DashboardLayout({ children }) {
       <Navbar />
       
       {/* Main content area with sidebar */}
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         {/* Sidebar on the left */}
         <Sidebar />
         
         {/* Main content area */}
-        <main className="flex-1 ml-0">
+        <main className="flex-1 ml-0 overflow-y-auto">
           <div className="p-6">
             {children}
           </div>

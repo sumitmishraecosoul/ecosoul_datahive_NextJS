@@ -15,17 +15,17 @@ const DEFAULT_COLUMNS = [
     label: 'AVAILABLE', 
     renderCell: (item) => (
       <span className="text-green-600 font-medium">
-        {item.available.toLocaleString()}
+        {item.available?.toLocaleString() || '-'}
       </span>
     )
   },
-  { label: '30D SALES', renderCell: (item) => item.sales30d.toLocaleString() },
-  { label: '7D SALES', renderCell: (item) => item.sales7d.toLocaleString() },
+  { label: '30D SALES', renderCell: (item) => item.sales30d?.toLocaleString() || '-' },
+  { label: '7D SALES', renderCell: (item) => item.sales7d?.toLocaleString() || '-' },
   { 
     label: 'DOS', 
     renderCell: (item) => (
       <span className="text-blue-600 font-medium">
-        {item.dos}
+        {item.dos || '-'}
       </span>
     )
   },
@@ -37,7 +37,10 @@ const MetricTable = ({ title, rows, columns }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 25;
 
-  const baseNodes = Array.isArray(rows) ? rows : [];
+  const baseNodes = Array.isArray(rows) ? rows.map((item, index) => ({
+    ...item,
+    id: item.id || `row-${index}` // Always use index-based ID to ensure uniqueness
+  })) : [];
 
   const filteredNodes = React.useMemo(() => {
     if (!appliedSku || appliedSku.trim() === '') return baseNodes;
@@ -46,7 +49,10 @@ const MetricTable = ({ title, rows, columns }) => {
       // Handle different possible SKU field names and data structures
       const skuValue = item.sku || item.SKU || item.id || item.product_id || '';
       return String(skuValue).toLowerCase().includes(query);
-    });
+    }).map((item, index) => ({
+      ...item,
+      id: item.id || `filtered-row-${index}` // Ensure filtered rows also have unique IDs
+    }));
   }, [appliedSku, baseNodes]);
 
   React.useEffect(() => {
@@ -56,10 +62,15 @@ const MetricTable = ({ title, rows, columns }) => {
   const totalPages = Math.max(1, Math.ceil(filteredNodes.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
   const startIdx = (safePage - 1) * pageSize;
-  const pagedNodes = filteredNodes.slice(startIdx, startIdx + pageSize);
+  const pagedNodes = filteredNodes.slice(startIdx, startIdx + pageSize).map((item, index) => ({
+    ...item,
+    id: item.id || `page-${safePage}-row-${index}` // Ensure paginated rows have unique IDs
+  }));
 
   const data = { nodes: pagedNodes };
-  const tableColumns = Array.isArray(columns) && columns.length > 0 ? columns : DEFAULT_COLUMNS;
+  const tableColumns = Array.isArray(columns) && columns.length > 0 
+    ? columns.map((col, index) => ({ ...col, id: col.id || col.label || `col-${index}` }))
+    : DEFAULT_COLUMNS.map((col, index) => ({ ...col, id: col.id || col.label || `col-${index}` }));
   
   const theme = {
     Table: `
@@ -115,7 +126,7 @@ const MetricTable = ({ title, rows, columns }) => {
             if (e.key === 'Enter') setAppliedSku(skuInput);
           }}
           placeholder="Search by SKU"
-          className="w-full max-w-xs border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full max-w-xs border rounded-md text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           onClick={() => setAppliedSku(skuInput)}
