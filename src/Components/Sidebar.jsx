@@ -10,7 +10,7 @@ const Sidebar = () => {
     if (itemId === 'supplychain') {
       router.push('/dashboard/supply-chain');
     } else if (itemId === 'ecommerce') {
-      router.push('/dashboard/ecommerce');
+      router.push('/dashboard/e-commerce');
     } else {
       router.push(`/${itemId}`);
     }
@@ -56,7 +56,7 @@ const Sidebar = () => {
             onClick={() => handleItemClick(item.id)}
             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
               (item.id === 'supplychain' && pathname.startsWith('/dashboard/supply-chain')) ||
-              (item.id === 'ecommerce' && pathname.startsWith('/dashboard/ecommerce'))
+              (item.id === 'ecommerce' && pathname.startsWith('/dashboard/e-commerce'))
                 ? 'bg-blue-100 text-blue-600 border-r-2 border-blue-400'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}

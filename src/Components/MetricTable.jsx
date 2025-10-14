@@ -71,10 +71,15 @@ const MetricTable = ({ title, rows, columns }) => {
   const tableColumns = Array.isArray(columns) && columns.length > 0 
     ? columns.map((col, index) => ({ ...col, id: col.id || col.label || `col-${index}` }))
     : DEFAULT_COLUMNS.map((col, index) => ({ ...col, id: col.id || col.label || `col-${index}` }));
-  
+
+  // Dynamically size columns to fit header text and enable wrapping
+  const columnCount = Math.max(1, tableColumns.length);
+  // Give each column a reasonable min width and allow it to grow; avoid forced ellipsis
+  const gridTemplate = `repeat(${columnCount}, minmax(140px, auto))`;
+
   const theme = {
     Table: `
-      --data-table-library_grid-template-columns: repeat(10, 1fr);
+      --data-table-library_grid-template-columns: ${gridTemplate};
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       overflow: hidden;
@@ -83,13 +88,25 @@ const MetricTable = ({ title, rows, columns }) => {
     HeaderCell: `
       background-color: #e5e7eb;
       color: #000000;
-      text-align: centre;
+      text-align: left;
       font-weight: 500;
       font-size: 12px;
       padding: 14px;
       border-bottom: 2px solid #e5e7eb;
       letter-spacing: 0.01em;
       position: sticky;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: break-word;
+      line-height: 1.2;
+      /* Override inner container from table-library that applies ellipsis */
+      & > div {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        word-break: break-word !important;
+      }
     `,
     Body: `
       .tr {
@@ -151,7 +168,7 @@ const MetricTable = ({ title, rows, columns }) => {
           Showing {filteredNodes.length} of {baseNodes.length} results for "{appliedSku}"
         </div>
       )}
-      <div className="max-h-96 overflow-y-auto">
+      <div className="max-h-96 overflow-y-auto overflow-x-auto">
         <CompactTable columns={tableColumns} data={data} theme={theme} />
       </div>
       <div className="flex items-center justify-end gap-2 pt-2">
