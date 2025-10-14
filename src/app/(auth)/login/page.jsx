@@ -49,7 +49,7 @@ export default function Login() {
     if (Object.keys(validationErrors).length === 0) {
       console.log("Login Success:", formData);
       localStorage.setItem("isLoggedIn", "true");
-      router.push("/ecosouldashboard");
+      router.push("/dashboard");
     } else {
       setErrors(validationErrors);
     }

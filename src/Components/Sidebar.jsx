@@ -1,13 +1,19 @@
 import React from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import ecosoul_logo from "/ecosoulLogo.svg";
+import ecosoul_logo from "../../public/ecosoulLogo.svg";
 
 const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   
   const handleItemClick = (itemId) => {
-    router.push(`/${itemId}`);
+    if (itemId === 'supplychain') {
+      router.push('/dashboard/supply-chain');
+    } else if (itemId === 'ecommerce') {
+      router.push('/dashboard/ecommerce');
+    } else {
+      router.push(`/${itemId}`);
+    }
   };
 
   const menuItems = [
@@ -39,7 +45,7 @@ const Sidebar = () => {
     <div className="bg-white shadow-2xl border-r-2 border-gray-200 w-64 h-screen flex flex-col">
       <div className="p-4 border-b border-gray-200">  
         <div className="w-full h-28 flex items-center justify-center">
-          <img src={ecosoul_logo} alt="EcoSoul" className='w-[10rem] h-auto object-contain' />
+          <img src="/ecosoulLogo.svg" alt="EcoSoul" className='w-[10rem] h-auto object-contain' />
         </div>
       </div>
 
@@ -49,7 +55,8 @@ const Sidebar = () => {
             key={item.id}
             onClick={() => handleItemClick(item.id)}
             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
-              pathname === `/${item.id}`
+              (item.id === 'supplychain' && pathname.startsWith('/dashboard/supply-chain')) ||
+              (item.id === 'ecommerce' && pathname.startsWith('/dashboard/ecommerce'))
                 ? 'bg-blue-100 text-blue-600 border-r-2 border-blue-400'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}

@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { IoIosNotifications } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
-import thriveLogo from "/thriveLogo.svg";
+import thriveLogo from "../../public/thriveLogo.svg";
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,7 +45,7 @@ const Navbar = () => {
         <div className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
 
             <div className="flex items-center">
-                <img src={thriveLogo} alt="Thrive Logo" className="w-20 h-auto"/>
+                <img src="/thriveLogo.svg" alt="Thrive Logo" className="w-20 h-auto"/>
             </div>
             <div className="flex items-center space-x-4">
                 <div className="relative" ref={dropdownRef}>

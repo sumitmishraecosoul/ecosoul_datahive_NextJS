@@ -189,6 +189,9 @@ const LoginBackground = ({
       pr.vy = vy;
       pr.speed = speed;
 
+      // Add null check to prevent getBoundingClientRect error
+      if (!canvasRef.current) return;
+      
       const rect = canvasRef.current.getBoundingClientRect();
       pr.x = e.clientX - rect.left;
       pr.y = e.clientY - rect.top;
@@ -217,6 +220,9 @@ const LoginBackground = ({
     };
 
     const onClick = e => {
+      // Add null check to prevent getBoundingClientRect error
+      if (!canvasRef.current) return;
+      
       const rect = canvasRef.current.getBoundingClientRect();
       const cx = e.clientX - rect.left;
       const cy = e.clientY - rect.top;
