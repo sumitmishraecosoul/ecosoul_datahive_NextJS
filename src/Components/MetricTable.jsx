@@ -132,7 +132,7 @@ const MetricTable = ({ title, rows, columns }) => {
   return (
     <div className="flex flex-col gap-4 bg-white rounded-xl shadow-md p-4 w-full">
       <div>
-        <h1 className="text-2xl font-bold mb-2">{title}</h1>
+        <h1 className="text-2xl font-bold text-black mb-2">{title}</h1>
       </div>
       <div className="flex items-center gap-2">
         <input
