@@ -11,6 +11,8 @@ const Sidebar = () => {
       router.push('/dashboard/supply-chain');
     } else if (itemId === 'ecommerce') {
       router.push('/dashboard/e-commerce');
+    } else if (itemId === 'retail') {
+      router.push('/dashboard/retail');
     } else {
       router.push(`/${itemId}`);
     }
@@ -38,6 +40,17 @@ const Sidebar = () => {
           <rect x="3" y="12" width="18" height="2" rx="1"/>
         </svg>
       )
+    },
+    {
+      id:'retail',
+      label: 'Retail',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="3" y="4" width="18" height="2" rx="1"/>
+          <rect x="3" y="8" width="18" height="2" rx="1"/>
+          <rect x="3" y="12" width="18" height="2" rx="1"/>
+        </svg>
+      )
     }
   ]
 
@@ -56,7 +69,8 @@ const Sidebar = () => {
             onClick={() => handleItemClick(item.id)}
             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
               (item.id === 'supplychain' && pathname.startsWith('/dashboard/supply-chain')) ||
-              (item.id === 'ecommerce' && pathname.startsWith('/dashboard/e-commerce'))
+              (item.id === 'ecommerce' && pathname.startsWith('/dashboard/e-commerce')) ||
+              (item.id === 'retail' && pathname.startsWith('/dashboard/retail'))
                 ? 'bg-blue-100 text-blue-600 border-r-2 border-blue-400'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}

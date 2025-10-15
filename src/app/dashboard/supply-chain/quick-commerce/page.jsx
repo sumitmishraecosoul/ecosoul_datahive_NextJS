@@ -34,7 +34,7 @@ export default function QuickCommercePage() {
     'Required Qty': <FaMinus className="text-red-600" />,
     'Sellable after Required Qty': <FaShoppingCart className="text-red-600" />,
   };
-  const [filters, setFilters] = useState({ sku: '', location: '' });
+  const [filters, setFilters] = useState({ sku: '', country: '' });
   const [metrics, setMetrics] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export default function QuickCommercePage() {
   // Filter configuration for the FilterSelector
   const filterConfig = [
     { key: 'sku', label: 'SKU', placeholder: 'e.g. CRCBOZ10NL' },
-    { key: 'location', label: 'Location', placeholder: 'e.g. Bangalore' }
+    { key: 'country', label: 'Country', placeholder: 'e.g. Bangalore' }
   ];
 
   // Fetch data when filters change
@@ -163,23 +163,172 @@ export default function QuickCommercePage() {
   // Use API data if available, otherwise use default cards
   const metricCards = metrics.length > 0 ? metrics : defaultMetricCards;
 
-  // Table columns configuration - using flexible field mapping
+  // Table columns configuration with modern styling
   const tableColumns = [
-    { label: 'SKU', renderCell: (item) => item['SKU'] || item.sku || '' },
-    { label: 'Box/Case', renderCell: (item) => item['Box/Case'] || item.boxCase || '' },
-    { label: 'Location', renderCell: (item) => item['Location'] || item.location || '' },
-    { label: 'Warehouse Qty', renderCell: (item) => item['Warehouse Qty'] || item.warehouseQty || '' },
-    { label: 'Delivered', renderCell: (item) => item['Delivered'] || item.delivered || '' },
-    { label: 'In-Transit', renderCell: (item) => item['In-Transit'] || item.inTransit || '' },
-    { label: 'Invoiced_Qty', renderCell: (item) => item['Invoiced_Qty'] || item.invoicedQty || '' },
-    { label: 'Sellable(In Hand)', renderCell: (item) => item['Sellable(In Hand)'] || item.sellableInHand || '' },
-    { label: 'MTQ', renderCell: (item) => item['MTQ'] || item.mtq || '' },
-    { label: 'Active PO Qty', renderCell: (item) => item['Active PO Qty'] || item.activePOQty || '' },
-    { label: 'SLA Days', renderCell: (item) => item['SLA Days'] || item.slaDays || '' },
-    { label: 'Inward Qty', renderCell: (item) => item['Inward Qty'] || item.inwardQty || '' },
-    { label: 'Required Qty', renderCell: (item) => item['Required Qty'] || item.requiredQty || '' },
-    { label: 'Sellable after Re...', renderCell: (item) => item['Sellable after Required Qty'] || item.sellableAfterRequired || '' },
-    { label: 'Stock Status', renderCell: (item) => item['Stock Status'] || item.stockStatus || '' }
+    { 
+      label: 'SKU', 
+      renderCell: (item) => (
+        <span className="font-medium text-blue-600">
+          {item['SKU'] || item.sku || '-'}
+        </span>
+      )
+    },
+    { 
+      label: 'Box/Case', 
+      renderCell: (item) => (
+        <span className="font-medium text-purple-600">
+          {item['Box/Case'] || item.boxCase || '-'}
+        </span>
+      )
+    },
+    { 
+      label: 'Country', 
+      renderCell: (item) => (
+        <span className="font-medium text-gray-700">
+          {item['Country'] || item.country || '-'}
+        </span>
+      )
+    },
+    { 
+      label: 'Warehouse Qty', 
+      renderCell: (item) => {
+        const value = item['Warehouse Qty'] || item.warehouseQty;
+        return (
+          <span className="font-medium text-indigo-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Delivered', 
+      renderCell: (item) => {
+        const value = item['Delivered'] || item.delivered;
+        return (
+          <span className="font-medium text-green-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'In-Transit', 
+      renderCell: (item) => {
+        const value = item['In-Transit'] || item.inTransit;
+        return (
+          <span className="font-medium text-orange-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Invoiced Qty', 
+      renderCell: (item) => {
+        const value = item['Invoiced_Qty'] || item.invoicedQty;
+        return (
+          <span className="font-medium text-red-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Sellable(In Hand)', 
+      renderCell: (item) => {
+        const value = item['Sellable(In Hand)'] || item.sellableInHand;
+        return (
+          <span className="font-medium text-emerald-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'MTQ', 
+      renderCell: (item) => {
+        const value = item['MTQ'] || item.mtq;
+        return (
+          <span className="font-medium text-cyan-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Active PO Qty', 
+      renderCell: (item) => {
+        const value = item['Active PO Qty'] || item.activePOQty;
+        return (
+          <span className="font-medium text-lime-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'SLA Days', 
+      renderCell: (item) => {
+        const value = item['SLA Days'] || item.slaDays;
+        return (
+          <span className="font-medium text-amber-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Inward Qty', 
+      renderCell: (item) => {
+        const value = item['Inward Qty'] || item.inwardQty;
+        return (
+          <span className="font-medium text-teal-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Required Qty', 
+      renderCell: (item) => {
+        const value = item['Required Qty'] || item.requiredQty;
+        return (
+          <span className="font-medium text-rose-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Sellable after Re...', 
+      renderCell: (item) => {
+        const value = item['Sellable after Required Qty'] || item.sellableAfterRequired;
+        return (
+          <span className="font-medium text-violet-600">
+            {value ? parseFloat(value).toLocaleString() : '-'}
+          </span>
+        );
+      }
+    },
+    { 
+      label: 'Stock Status', 
+      renderCell: (item) => {
+        const status = item['Stock Status'] || item.stockStatus;
+        return (
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+            status === 'Surplus' || status === 'Available' || status === 'Good'
+              ? 'bg-green-100 text-green-800' 
+              : status === 'Low Stock' || status === 'Shortage' || status === 'Critical'
+              ? 'bg-red-100 text-red-800'
+              : status === 'Out of Stock' || status === 'Unavailable'
+              ? 'bg-gray-100 text-gray-800'
+              : 'bg-yellow-100 text-yellow-800'
+          }`}>
+            {status || '-'}
+          </span>
+        );
+      }
+    }
   ];
 
   return (
@@ -201,7 +350,7 @@ export default function QuickCommercePage() {
         config={filterConfig}
         options={{}}
         onChange={handleFilterChange}
-        onClear={() => setFilters({ sku: '', location: '' })}
+        onClear={() => setFilters({ sku: '', country: '' })}
       />
 
       {/* Metric Cards Grid */}

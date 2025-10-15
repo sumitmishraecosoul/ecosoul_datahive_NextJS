@@ -12,4 +12,13 @@ export const getEcommerceInventoryData = async (params = {}) => {
   return response.data;
 };
 
+export const getEcommerceOverviewMetricCardData = async (params = {}) => {
+  const response = await api.get('/ecommerce/overview/metric-card-data', { params });
+  return response.data;
+};
+
+export const getEcommerceOverviewDIByGeography = async (params = {}) => {
+  const response = await api.get('/ecommerce/overview/demand-instock-by-geography', { params });
+  return response.data;
+};
 

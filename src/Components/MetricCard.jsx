@@ -13,7 +13,7 @@ const MetricCard = (
   }
 ) => {
   return (
-    <div className="flex items-center justify-between bg-white rounded-xl shadow-md p-4 w-[50rem] max-w-xs hover:scale-105 transition-all duration-300 shadow-xl">
+    <div className="flex items-center justify-between bg-white rounded-xl shadow-md p-4 w-[15rem] max-w-xs hover:scale-105 transition-all duration-300 shadow-xl">
       <div className="flex flex-col gap-2">
         <h3 className="text-sm font-medium text-gray-600">{title}</h3>
         <p className="text-2xl font-bold text-gray-900">{value}</p>

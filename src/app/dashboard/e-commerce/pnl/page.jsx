@@ -6,7 +6,7 @@ import MetricTable from '../../../../Components/MetricTable';
 import { FaChartLine, FaPercent, FaMoneyBillWave, FaWarehouse, FaBalanceScale } from 'react-icons/fa';
 
 export default function ECommercePnLPage() {
-  const [filters, setFilters] = useState({ location: '', material: '', monthYear: '' });
+  const [filters, setFilters] = useState({ country: '', material: '', monthYear: '' });
 
   const handleFilterChange = (newFilters) => {
     const simple = {};
@@ -17,10 +17,10 @@ export default function ECommercePnLPage() {
     setFilters(simple);
   };
 
-  const handleClear = () => setFilters({ location: '', material: '', monthYear: '' });
+  const handleClear = () => setFilters({ country: '', material: '', monthYear: '' });
 
   const filterConfig = [
-    { key: 'location', label: 'Location', placeholder: 'e.g. Amazon-USA' },
+    { key: 'country', label: 'Country', placeholder: 'e.g. Amazon-USA' },
     { key: 'material', label: 'Material', placeholder: 'e.g. Palm Leaf' },
     { key: 'monthYear', label: 'Month-Year', placeholder: 'e.g. January 2025' }
   ];
