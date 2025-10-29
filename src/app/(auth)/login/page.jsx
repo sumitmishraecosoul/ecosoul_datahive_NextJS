@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import LoginBackground from "../../../Components/LoginBackground";
 import SplitText from "../../../Components/SplitText";
-import thriveLogo from "../../../../public/thriveLogo.svg";
+// import vectorLogo from "../../../public/vectorLogo.jpg";
 
 export default function Login() {
   const router = useRouter();   
@@ -101,8 +101,8 @@ export default function Login() {
           <div className="bg-white/95 backdrop-blur-md p-8 rounded-2xl shadow-lg w-full max-w-md text-black">
             <div className="flex justify-center px-4">
               <img
-                src="/thriveLogo.svg"
-                alt="EcoSoul Logo"
+                src="/vectorLogo.jpg"
+                alt="Vector AI Logo"
                 className="w-[10rem] h-[10rem]"
               />
             </div>
