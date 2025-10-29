@@ -252,34 +252,9 @@ export default function ECommercePage() {
 
   return (
     <>
-    <div className="bg-white rounded-xl shadow-md p-4 mb-8">
-    <h2 className="text-lg font-semibold text-black">Demand Instock by Geography</h2>
-  </div>
+   
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-    <MetricCard 
-      title="Canada (CA)" 
-      value={`${formatValue(geographyData.CA, 'number', geographyLoading, geographyError)}%`} 
-      icon={<Ca className="w-10 h-10" />} 
-    />
-    <MetricCard 
-      title="Germany (DE)" 
-      value={`${formatValue(geographyData.DE, 'number', geographyLoading, geographyError)}%`} 
-      icon={<De className="w-10 h-10" />} 
-    />
-    <MetricCard 
-      title="United Kingdom (UK)" 
-      value={`${formatValue(geographyData.UK, 'number', geographyLoading, geographyError)}%`} 
-      icon={<Gb className="w-10 h-10" />} 
-    />
-    <MetricCard 
-      title="United States (US)" 
-      value={`${formatValue(geographyData.US, 'number', geographyLoading, geographyError)}%`} 
-      icon={<Us className="w-10 h-10" />} 
-    />
-  </div>
-
-    <div className="space-y-6">
+  <div className="space-y-6">
       <FilterSelector
         title="Filters"
         config={filterConfig}
@@ -288,9 +263,7 @@ export default function ECommercePage() {
         onClear={handleClear}
       />
 
-
-       {/* KPI Cards */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 space-x-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 space-x-4">
         <MetricCard 
           title="Total Demand Unit" 
           value={formatValue(metricData.Demand)} 
@@ -317,6 +290,48 @@ export default function ECommercePage() {
           icon={<FaMoneyBillWave className="text-pink-500" />} 
         />
       </div>
+
+      <div className="bg-white rounded-xl shadow-md p-4 mb-8">
+    <h2 className="text-lg font-semibold text-black">Demand Instock by Geography</h2>
+  </div>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+  <MetricCard 
+      title="United States (US)" 
+      value={`${formatValue(geographyData.US, 'number', geographyLoading, geographyError)}%`} 
+      icon={<Us className="w-10 h-10" />} 
+    />
+    <MetricCard 
+      title="United Kingdom (UK)" 
+      value={`${formatValue(geographyData.UK, 'number', geographyLoading, geographyError)}%`} 
+      icon={<Gb className="w-10 h-10" />} 
+    />
+    <MetricCard 
+      title="Canada (CA)" 
+      value={`${formatValue(geographyData.CA, 'number', geographyLoading, geographyError)}%`} 
+      icon={<Ca className="w-10 h-10" />} 
+    />
+    <MetricCard 
+      title="Germany (DE)" 
+      value={`${formatValue(geographyData.DE, 'number', geographyLoading, geographyError)}%`} 
+      icon={<De className="w-10 h-10" />} 
+    />
+    
+    
+  </div>
+
+    {/* <div className="space-y-6">
+      <FilterSelector
+        title="Filters"
+        config={filterConfig}
+        options={{}}
+        onChange={handleFilterChange}
+        onClear={handleClear}
+      /> */}
+
+
+       {/* KPI Cards */}
+       
 
         {/* Data Table */}
         <MetricTable

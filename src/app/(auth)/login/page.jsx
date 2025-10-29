@@ -86,7 +86,7 @@ export default function Login() {
               to={{ opacity: 1, y: 0 }}
             />
              <SplitText
-              text="Thrive Brands Dashboards"
+              text="Vector AI Studio Dashboards"
               tag="h1"
               className="text-7xl font-bold text-white mb-4"
               delay={100}

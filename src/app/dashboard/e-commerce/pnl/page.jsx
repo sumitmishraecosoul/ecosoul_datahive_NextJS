@@ -26,34 +26,39 @@ export default function ECommercePnLPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Filters */}
-      <FilterSelector
-        title="Filters"
-        config={filterConfig}
-        options={{}}
-        onChange={handleFilterChange}
-        onClear={handleClear}
-      />
+    // <div className="space-y-6">
+    //   {/* Filters */}
+    //   <FilterSelector
+    //     title="Filters"
+    //     config={filterConfig}
+    //     options={{}}
+    //     onChange={handleFilterChange}
+    //     onClear={handleClear}
+    //   />
 
-      {/* KPI + Table Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: 6 KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <MetricCard title="CM1%" value={'83%'} icon={<FaChartLine className="text-yellow-500" />} />
-          <MetricCard title="CM2%" value={'45%'} icon={<FaPercent className="text-yellow-500" />} />
-          <MetricCard title="CM3%" value={'0%'} icon={<FaPercent className="text-yellow-500" />} />
-          <MetricCard title="Ad Spend %" value={'24%'} icon={<FaMoneyBillWave className="text-yellow-500" />} />
-          <MetricCard title="Storage Fee %" value={'-2%'} icon={<FaWarehouse className="text-yellow-500" />} />
-          <MetricCard title="Selling Fee %" value={'-15%'} icon={<FaBalanceScale className="text-yellow-500" />} />
-        </div>
+    //   {/* KPI + Table Section */}
+    //   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    //     {/* Left: 6 KPI Cards */}
+    //     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    //       <MetricCard title="CM1%" value={'83%'} icon={<FaChartLine className="text-yellow-500" />} />
+    //       <MetricCard title="CM2%" value={'45%'} icon={<FaPercent className="text-yellow-500" />} />
+    //       <MetricCard title="CM3%" value={'0%'} icon={<FaPercent className="text-yellow-500" />} />
+    //       <MetricCard title="Ad Spend %" value={'24%'} icon={<FaMoneyBillWave className="text-yellow-500" />} />
+    //       <MetricCard title="Storage Fee %" value={'-2%'} icon={<FaWarehouse className="text-yellow-500" />} />
+    //       <MetricCard title="Selling Fee %" value={'-15%'} icon={<FaBalanceScale className="text-yellow-500" />} />
+    //     </div>
 
-        {/* Right: Data Table */}
-        <div className="bg-white rounded-xl shadow-md p-2">
-          <MetricTable title="" rows={[]} columns={[]} />
-        </div>
-      </div>
+    //     {/* Right: Data Table */}
+    //     <div className="bg-white rounded-xl shadow-md p-2">
+    //       <MetricTable title="" rows={[]} columns={[]} />
+    //     </div>
+    //   </div>
+    // </div>
+    <>
+    <div>
+      <h1 className='text-2xl font-bold text-center text-black'>Coming Soon !</h1>
     </div>
+    </>
   );
 }
 
