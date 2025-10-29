@@ -10,10 +10,6 @@ export default function RetailLayout({ children }) {
   const handleTabChange = (index, tabName) => {
     if (tabName === 'Overview') {
       router.push('/dashboard/retail');
-    } else if (tabName === 'Stores') {
-      router.push('/dashboard/retail/stores');
-     } else if (tabName === 'Demand & Supply') {
-      router.push('/dashboard/retail/demand-supply');
     }
     else if (tabName === 'Walmart') {
       router.push('/dashboard/retail/walmart');
@@ -24,14 +20,6 @@ export default function RetailLayout({ children }) {
   const getActiveTab = () => {
     if (pathname === '/dashboard/retail/stores') {
       return 1; // Stores tab
-    }
-    if (pathname === '/dashboard/retail/demand-supply') {
-      return 2; // Demand & Supply tab
-    }
-    if (pathname === '/dashboard/retail/walmart') {
-      return 3; // Walmart tab
-    } else if (pathname === '/dashboard/retail/walmart') {
-      return 3; // Walmart tab
     }
     return 0; // Overview tab (default)
   };
@@ -46,7 +34,7 @@ export default function RetailLayout({ children }) {
           
           {/* Tab Selector */}
           <TabSelector 
-             tabs={['Overview', 'Stores','Demand & Supply','Walmart']}
+             tabs={['Overview','Walmart']}
             onTabChange={handleTabChange}
             defaultActiveTab={getActiveTab()}
           />
