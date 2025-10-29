@@ -208,84 +208,100 @@ export default function ECommercePage() {
     return new Intl.NumberFormat('en-US').format(Math.round(num));
   };
 
+  // Helper to format generic numbers safely
+  const formatNumber = (val) => {
+    const num = Number(val);
+    return Number.isFinite(num) ? num.toLocaleString() : '-';
+  };
+
   // Custom columns configuration for the table based on API response
   const tableColumns = [
-    { 
-      label: 'SKU', 
-      renderCell: (item) => (
-        <span className="font-medium text-blue-600">{item.SKU || '-'}</span>
-      )
-    },
-    { 
-      label: 'Country', 
+    {
+      label: 'Country',
       renderCell: (item) => (
         <span className="font-medium text-gray-700">{item.Country || '-'}</span>
       )
     },
-    { 
-      label: 'Month-Year', 
+    {
+      label: 'Year Month',
       renderCell: (item) => (
-        <span className="text-gray-600">{item['Month-Year'] || '-'}</span>
+        <span className="text-gray-600">{item['Year Month'] || '-'}</span>
       )
     },
-    { 
-      label: 'Demand', 
+    {
+      label: 'SKU',
       renderCell: (item) => (
-        <span className="font-medium text-purple-600">
-          {item.Demand ? parseFloat(item.Demand).toLocaleString() : '-'}
-        </span>
+        <span className="font-medium text-blue-600">{item.SKU || '-'}</span>
       )
     },
-    { 
-      label: 'ADS', 
+    {
+      label: 'Status',
       renderCell: (item) => (
-        <span className="text-gray-600">
-          {item.ADS ? parseFloat(item.ADS).toFixed(2) : '-'}
-        </span>
+        <span className="text-gray-700">{item.Status || '-'}</span>
       )
     },
-    { 
-      label: '30D Sales', 
+    {
+      label: 'Demand',
       renderCell: (item) => (
-        <span className="font-medium text-green-600">
-          {item.Exp_RoundUP_30_Days_Sales ? parseFloat(item.Exp_RoundUP_30_Days_Sales).toLocaleString() : '-'}
-        </span>
+        <span className="font-medium text-purple-600">{formatNumber(item.Demand)}</span>
       )
     },
-    { 
-      label: 'Last 30 Sales', 
+    {
+      label: 'Last 30 day sale qty',
       renderCell: (item) => (
-        <span className="text-gray-600">
-          {item.last_30_Sale_Quantity ? parseFloat(item.last_30_Sale_Quantity).toLocaleString() : '-'}
-        </span>
+        <span className="text-gray-600">{formatNumber(item['Last 30 day sale qty'])}</span>
       )
     },
-    { 
-      label: 'Total Incoming', 
+    {
+      label: 'MTD sale',
       renderCell: (item) => (
-        <span className="font-medium text-blue-600">
-          {item['Total incoming'] ? parseFloat(item['Total incoming']).toLocaleString() : '-'}
-        </span>
+        <span className="text-gray-600">{formatNumber(item['MTD sale'])}</span>
       )
     },
-    { 
-      label: 'Net Sellable', 
+    {
+      label: 'Forecasted Sale',
       renderCell: (item) => (
-        <span className="font-medium text-orange-600">
-          {item.Net_Sellable ? parseFloat(item.Net_Sellable).toLocaleString() : '-'}
-        </span>
+        <span className="font-medium text-green-600">{formatNumber(item['Forecasted Sale'])}</span>
       )
     },
-    { 
-      label: 'Instock Rate', 
+    {
+      label: 'On hand Amazon WH',
       renderCell: (item) => (
-        <span className="font-medium text-indigo-600">
-          {item.Instock_rate_base ? `${parseFloat(item.Instock_rate_base).toFixed(1)}%` : '-'}
-        </span>
+        <span className="text-gray-600">{formatNumber(item['On hand Amazon WH'])}</span>
       )
     },
-    { 
-      label: 'Alert', 
+    {
+      label: 'AWD',
+      renderCell: (item) => (
+        <span className="text-gray-600">{formatNumber(item.AWD)}</span>
+      )
+    },
+    {
+      label: 'AWD-Intransit',
+      renderCell: (item) => (
+        <span className="text-gray-600">{formatNumber(item['AWD-Intransit'])}</span>
+      )
+    },
+    {
+      label: 'Net Sellable',
+      renderCell: (item) => (
+        <span className="font-medium text-orange-600">{formatNumber(item['Net Sellable'])}</span>
+      )
+    },
+    {
+      label: 'Demand Fulfillable',
+      renderCell: (item) => (
+        <span className="text-gray-700">{formatNumber(item['Demand Fulfillable'])}</span>
+      )
+    },
+    {
+      label: 'Instock Rate',
+      renderCell: (item) => (
+        <span className="font-medium text-indigo-600">{item['Instock Rate'] ? `${parseFloat(item['Instock Rate']).toFixed(1)}%` : '-'}</span>
+      )
+    },
+    {
+      label: 'Alert',
       renderCell: (item) => (
         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
           item.Alert === 'At Risk' 
@@ -298,12 +314,22 @@ export default function ECommercePage() {
         </span>
       )
     },
-    { 
-      label: 'Sale Lost', 
+    {
+      label: 'Incoming Date',
       renderCell: (item) => (
-        <span className="font-medium text-red-600">
-          {item.Sale_Lost ? `$${parseFloat(item.Sale_Lost).toLocaleString()}` : '-'}
-        </span>
+        <span className="text-gray-600">{item['Incoming Date'] || '-'}</span>
+      )
+    },
+    {
+      label: 'Total Incoming',
+      renderCell: (item) => (
+        <span className="font-medium text-blue-600">{formatNumber(item['Total Incoming'])}</span>
+      )
+    },
+    {
+      label: 'OB with Inbound',
+      renderCell: (item) => (
+        <span className="font-medium text-gray-700">{formatNumber(item['OB with Inbound'])}</span>
       )
     }
   ];
@@ -349,25 +375,6 @@ export default function ECommercePage() {
         />
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <BarChart
-          title="Alert Count by Geography"
-          categories={alertCategories}
-          series={alertSeries}
-          colors={["#EF4444", "#FFD700", "#008000"]}
-          height={320}
-        />
-
-        <BarChart
-          title="SKU Type by Geography"
-          categories={skuCategories}
-          series={skuSeries}
-          colors={["#EF4444", "#00BFFF"]}
-          height={320}
-        />
-      </div>
-
       <div className="bg-white rounded-xl shadow-md p-4 mb-8">
     <h2 className="text-lg font-semibold text-black">Demand Instock by Geography</h2>
   </div>
@@ -393,9 +400,26 @@ export default function ECommercePage() {
       value={`${formatValue(geographyData.DE, 'number', geographyLoading, geographyError)}%`} 
       icon={<De className="w-10 h-10" />} 
     />
-    
-    
   </div>
+
+  {/* Charts */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BarChart
+          title="Alert Count by Geography"
+          categories={alertCategories}
+          series={alertSeries}
+          colors={["#EF4444", "#FFD700", "#008000"]}
+          height={320}
+        />
+
+        <BarChart
+          title="SKU Type by Geography"
+          categories={skuCategories}
+          series={skuSeries}
+          colors={["#EF4444", "#00BFFF"]}
+          height={320}
+        />
+      </div>
 
     {/* <div className="space-y-6">
       <FilterSelector

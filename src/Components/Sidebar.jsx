@@ -63,7 +63,7 @@ const Sidebar = () => {
       </div>
 
       <nav className="flex-1 p-4 space-y-4">
-        {menuItems.map((item) => (
+        {menuItems.filter((i) => i.id !== 'retail').map((item) => (
           <button
             key={item.id}
             onClick={() => handleItemClick(item.id)}
