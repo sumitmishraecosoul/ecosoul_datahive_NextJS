@@ -4,7 +4,8 @@ import FilterSelector from '../../../Components/FilterSelector';
 import MetricCard from '../../../Components/MetricCard';
 import MetricTable from '../../../Components/MetricTable';
 import { FaShoppingCart, FaWarehouse, FaTruckMoving, FaMoneyBillWave, FaChartLine } from 'react-icons/fa';
-import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData } from '../../../api/ecommerce';
+import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography } from '../../../api/ecommerce';
+import BarChart from '../../../Components/BarChart';
 import { Us, De, Gb, Ca } from 'react-flags-select';
 
 
@@ -30,6 +31,19 @@ export default function ECommercePage() {
   const [geographyError, setGeographyError] = useState(null);
   const [tableError, setTableError] = useState(null);
   const [tableData, setTableData] = useState([]);
+  // Alert Count by Geography chart state
+  const [alertCategories, setAlertCategories] = useState(['US','UK','CA','DE']);
+  const [alertSeries, setAlertSeries] = useState([
+    { name: 'At Risk', data: [0,0,0,0] },
+    { name: 'Critical', data: [0,0,0,0] },
+    { name: 'Out Of Stock', data: [0,0,0,0] },
+  ]);
+  // SKU Type by Geography chart state
+  const [skuCategories, setSkuCategories] = useState(['US','UK','CA','DE']);
+  const [skuSeries, setSkuSeries] = useState([
+    { name: 'Critical', data: [0,0,0,0] },
+    { name: 'Non Critical', data: [0,0,0,0] },
+  ]);
 
   const handleFilterChange = (newFilters) => {
     const simple = {};
@@ -115,6 +129,50 @@ export default function ECommercePage() {
     };
 
     fetchTableData();
+  }, [filters]);
+
+  // Fetch Alert Count by Geography (chart 1)
+  useEffect(() => {
+    const fetchAlertChart = async () => {
+      try {
+        const resp = await getEcommerceAlertCountByGeography(filters);
+        const geoOrder = ['US','UK','CA','DE'];
+        const categories = geoOrder;
+        const series = (resp?.series || []).map((s) => {
+          const name = s?.Alert === 'Out of Stock' ? 'Out Of Stock' : (s?.Alert || '');
+          const data = geoOrder.map((g) => Number(s?.data?.[g] ?? 0));
+          return { name, data };
+        });
+        setAlertCategories(categories);
+        setAlertSeries(series);
+      } catch (e) {
+        // Keep previous/zero state on failure
+        console.error('Failed to fetch alert count by geography', e);
+      }
+    };
+    fetchAlertChart();
+  }, [filters]);
+
+  // Fetch SKU Type by Geography (chart 2)
+  useEffect(() => {
+    const fetchSkuChart = async () => {
+      try {
+        const resp = await getEcommerceSKUTypeByGeography(filters);
+        const geoOrder = ['US','UK','CA','DE'];
+        const categories = geoOrder;
+        const series = (resp?.series || []).map((s) => {
+          const name = s?.Alert || '';
+          const data = geoOrder.map((g) => Number(s?.data?.[g] ?? 0));
+          return { name, data };
+        });
+        setSkuCategories(categories);
+        setSkuSeries(series);
+      } catch (e) {
+        // Keep previous/zero state on failure
+        console.error('Failed to fetch SKU type by geography', e);
+      }
+    };
+    fetchSkuChart();
   }, [filters]);
 
   const filterConfig = [
@@ -288,6 +346,25 @@ export default function ECommercePage() {
           title="Sale Lost Value" 
           value={formatValue(metricData['Sale Lost'])} 
           icon={<FaMoneyBillWave className="text-pink-500" />} 
+        />
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BarChart
+          title="Alert Count by Geography"
+          categories={alertCategories}
+          series={alertSeries}
+          colors={["#EF4444", "#FFD700", "#008000"]}
+          height={320}
+        />
+
+        <BarChart
+          title="SKU Type by Geography"
+          categories={skuCategories}
+          series={skuSeries}
+          colors={["#EF4444", "#00BFFF"]}
+          height={320}
         />
       </div>
 

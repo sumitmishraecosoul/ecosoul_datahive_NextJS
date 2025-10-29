@@ -16,7 +16,7 @@ export default function Login() {
 
   const [errors, setErrors] = useState({});
 
-  const departments = ["Supply Chain"];
+  const departments = ["Supply Chain","E-Commerce","Retail"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
