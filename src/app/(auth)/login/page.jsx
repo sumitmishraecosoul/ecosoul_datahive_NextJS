@@ -86,9 +86,18 @@ export default function Login() {
               to={{ opacity: 1, y: 0 }}
             />
              <SplitText
-              text="Vector AI Studio Dashboards"
+              text="Vector AI Studio"
               tag="h1"
-              className="text-7xl font-bold text-white mb-4"
+              className="text-7xl font-bold text-white mb-4 mr-2"
+              delay={100}
+              duration={1.2}
+              from={{ opacity: 0, y: 50 }}
+              to={{ opacity: 1, y: 0 }}
+            />
+            <SplitText
+              text="DataHive"
+              tag="h1"
+              className="text-7xl font-bold text-white mb-4 ml-2"
               delay={100}
               duration={1.2}
               from={{ opacity: 0, y: 50 }}
