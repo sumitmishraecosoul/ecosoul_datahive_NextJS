@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Worklytics",
   description: "Worklytics",
+  favicon: "/vectorLogo.jpg",
 };
 
 export default function RootLayout({ children }) {

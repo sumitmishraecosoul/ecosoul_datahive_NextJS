@@ -19,6 +19,7 @@ const FilterSelector = ({
   className = '',
 }) => {
   const [selectedFilters, setSelectedFilters] = useState({});
+  const enhancedKeys = ['country', 'alert', 'skuType', 'status'];
 
   const handleFilterChange = (filterKey, selectedOption) => {
     const next = { ...selectedFilters, [filterKey]: selectedOption };
@@ -40,17 +41,32 @@ const FilterSelector = ({
         <h1 className='text-xl font-bold text-gray-800'>{title}</h1>
       </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4'>
         {config.map((filter) => (
           <div key={filter.key} className='flex flex-col min-w-0'>
             <label className='text-sm font-medium text-gray-700 mb-2'>{filter.label}</label>
-            <input
-              type='text'
-              className='border border-gray-300 rounded-lg px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500'
-              placeholder={filter.placeholder}
-              value={selectedFilters[filter.key]?.value || ''}
-              onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}
-            />
+            {Array.isArray(filter.options) && filter.options.length > 0 ? (
+              <select
+                className={`border border-gray-300 ${enhancedKeys.includes(filter.key) ? 'rounded-xl' : 'rounded-lg'} px-3 py-2 bg-white text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none cursor-pointer placeholder:text-gray-400 hover:border-gray-400 shadow-sm`}
+                value={selectedFilters[filter.key]?.value || ''}
+                onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}
+              >
+                <option value='' className='text-gray-400'>
+                  {filter.placeholder || `Select ${filter.label}`}
+                </option>
+                {filter.options.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type='text'
+                className='border border-gray-300 rounded-lg px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder:text-gray-400 hover:border-gray-400 shadow-sm'
+                placeholder={filter.placeholder}
+                value={selectedFilters[filter.key]?.value || ''}
+                onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}
+              />
+            )}
           </div>
         ))}
       </div>

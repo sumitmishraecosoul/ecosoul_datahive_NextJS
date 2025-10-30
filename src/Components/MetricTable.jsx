@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { CompactTable } from '@table-library/react-table-library/compact';
 
 // rows are provided by parent; no static demo data here
@@ -75,7 +75,7 @@ const MetricTable = ({ title, rows, columns }) => {
   // Dynamically size columns to fit header text and enable wrapping
   const columnCount = Math.max(1, tableColumns.length);
   // Give each column a reasonable min width and allow it to grow; avoid forced ellipsis
-  const gridTemplate = `repeat(${columnCount}, minmax(140px, auto))`;
+  const gridTemplate = `repeat(${columnCount}, minmax(120px, auto))`;
 
   const theme = {
     Table: `
@@ -91,7 +91,7 @@ const MetricTable = ({ title, rows, columns }) => {
       text-align: left;
       font-weight: 500;
       font-size: 12px;
-      padding: 14px;
+      padding: 10px 12px;
       border-bottom: 2px solid #e5e7eb;
       letter-spacing: 0.01em;
       position: sticky;
@@ -119,7 +119,7 @@ const MetricTable = ({ title, rows, columns }) => {
         }
       }
       .td {
-        padding: 16px;
+        padding: 10px 12px;
         font-size: 12px;
         color: #374151;
         border-bottom: 1px solid #f3f4f6;
@@ -127,6 +127,35 @@ const MetricTable = ({ title, rows, columns }) => {
         vertical-align: middle;
       }
     `,
+  };
+
+  const hScrollRef = useRef(null); // sticky horizontal scrollbar
+  const contentScrollRef = useRef(null); // actual content horizontal scroller
+  const [spacerWidth, setSpacerWidth] = useState(0);
+
+  useEffect(() => {
+    const updateWidths = () => {
+      const el = contentScrollRef.current;
+      if (!el) return;
+      setSpacerWidth(el.scrollWidth);
+    };
+    updateWidths();
+    window.addEventListener('resize', updateWidths);
+    return () => window.removeEventListener('resize', updateWidths);
+  }, [tableColumns.length, data.nodes.length]);
+
+  const syncFromSticky = (e) => {
+    const target = e.currentTarget;
+    if (contentScrollRef.current && contentScrollRef.current.scrollLeft !== target.scrollLeft) {
+      contentScrollRef.current.scrollLeft = target.scrollLeft;
+    }
+  };
+
+  const syncFromContent = (e) => {
+    const target = e.currentTarget;
+    if (hScrollRef.current && hScrollRef.current.scrollLeft !== target.scrollLeft) {
+      hScrollRef.current.scrollLeft = target.scrollLeft;
+    }
   };
 
   return (
@@ -168,8 +197,27 @@ const MetricTable = ({ title, rows, columns }) => {
           Showing {filteredNodes.length} of {baseNodes.length} results for "{appliedSku}"
         </div>
       )}
-      <div className="max-h-96 overflow-y-auto overflow-x-auto">
-        <CompactTable columns={tableColumns} data={data} theme={theme} />
+      <div className="max-h-96 overflow-y-auto relative">
+        <div
+          ref={contentScrollRef}
+          onScroll={syncFromContent}
+          className="overflow-x-auto scroll-container hide-x-scrollbar pb-4 w-full"
+        >
+          <div className="min-w-max">
+            <CompactTable columns={tableColumns} data={data} theme={theme} />
+          </div>
+        </div>
+        {/* right edge aesthetic border */}
+        <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-px bg-gray-200" />
+        <div className="sticky bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200">
+          <div
+            ref={hScrollRef}
+            onScroll={syncFromSticky}
+            className="overflow-x-auto scroll-container"
+          >
+            <div style={{ width: spacerWidth, height: 1 }} />
+          </div>
+        </div>
       </div>
       <div className="flex items-center justify-end gap-2 pt-2">
         <button

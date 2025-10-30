@@ -79,7 +79,9 @@ export default function BarChart({
       markers: { radius: 6 },
     },
     tooltip: {
-      theme: 'light',
+      theme: 'dark', // higher contrast for readability
+      style: { fontSize: '14px', fontFamily: 'inherit' },
+      marker: { show: true },
       y: {
         formatter: (val) => {
           const num = Number(val);

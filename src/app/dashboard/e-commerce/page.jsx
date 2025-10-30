@@ -10,7 +10,7 @@ import { Us, De, Gb, Ca } from 'react-flags-select';
 
 
 export default function ECommercePage() {
-  const [filters, setFilters] = useState({ sku: '', material: '', monthYear: '',country: '' });
+  const [filters, setFilters] = useState({ sku: '', material: '', monthYear: '',country: '', alert: '', skuType: '', status: '' });
   const [metricData, setMetricData] = useState({
     Demand: 0,
     'afn-fulfillable-quantity': 0,
@@ -54,7 +54,7 @@ export default function ECommercePage() {
     setFilters(simple);
   };
 
-  const handleClear = () => setFilters({ sku: '', material: '', monthYear: '',country: '' });
+  const handleClear = () => setFilters({ sku: '', material: '', monthYear: '',country: '', alert: '', skuType: '', status: '' });
 
   // Fetch metric card data
   useEffect(() => {
@@ -179,7 +179,24 @@ export default function ECommercePage() {
     { key: 'sku', label: 'SKU', placeholder: 'e.g. CRCBOZ10NL' },
     { key: 'material', label: 'Material', placeholder: 'e.g. Palm Leaf' },
     { key: 'monthYear', label: 'Year-Month', placeholder: 'e.g. 2025-10' },
-    { key: 'country', label: 'Country', placeholder: 'e.g. US' }
+    { key: 'country', label: 'Country', placeholder: 'Select Country', options: [
+      { value: 'US', label: 'US' },
+      { value: 'UK', label: 'UK' },
+      { value: 'CA', label: 'CA' },
+      { value: 'GE', label: 'GE' },
+    ] },
+    { key: 'alert', label: 'Alert', placeholder: 'Select Alert', options: [
+      { value: 'At Risk', label: 'At Risk' },
+      { value: 'Safe', label: 'Safe' },
+    ] },
+    { key: 'skuType', label: 'SKU Type', placeholder: 'Select SKU Type', options: [
+      { value: 'Critical', label: 'Critical' },
+      { value: 'Non Critical', label: 'Non Critical' },
+    ] },
+    { key: 'status', label: 'Status', placeholder: 'Select Status', options: [
+      { value: 'Exisiting', label: 'Exisiting' },
+      { value: 'New', label: 'New' },
+    ] }
   ];
 
   // Helper function to format values
