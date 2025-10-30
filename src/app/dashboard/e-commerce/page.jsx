@@ -4,7 +4,7 @@ import FilterSelector from '../../../Components/FilterSelector';
 import MetricCard from '../../../Components/MetricCard';
 import MetricTable from '../../../Components/MetricTable';
 import { FaShoppingCart, FaWarehouse, FaTruckMoving, FaMoneyBillWave, FaChartLine } from 'react-icons/fa';
-import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography } from '../../../api/ecommerce';
+import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography, getEcommerceSKUCountByGeography } from '../../../api/ecommerce';
 import BarChart from '../../../Components/BarChart';
 import { Us, De, Gb, Ca } from 'react-flags-select';
 
@@ -16,7 +16,9 @@ export default function ECommercePage() {
     'afn-fulfillable-quantity': 0,
     'Sale Quantity': 0,
     'Total Incoming': 0,
-    'Sale Lost': 0
+    'Sale Lost': 0,
+    AWD: 0,
+    'AWD-Intransit': 0
   });
   const [geographyData, setGeographyData] = useState({
     CA: 0,
@@ -24,11 +26,14 @@ export default function ECommercePage() {
     UK: 0,
     US: 0
   });
+  const [skuCountGeo, setSkuCountGeo] = useState({ CA: 0, DE: 0, UK: 0, US: 0 });
   const [loading, setLoading] = useState(true);
   const [geographyLoading, setGeographyLoading] = useState(true);
+  const [skuCountLoading, setSkuCountLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(true);
   const [error, setError] = useState(null);
   const [geographyError, setGeographyError] = useState(null);
+  const [skuCountError, setSkuCountError] = useState(null);
   const [tableError, setTableError] = useState(null);
   const [tableData, setTableData] = useState([]);
   // Alert Count by Geography chart state
@@ -73,6 +78,34 @@ export default function ECommercePage() {
     };
 
     fetchMetricData();
+  }, [filters]);
+
+  // Fetch SKU count by geography (cards)
+  useEffect(() => {
+    const fetchSkuCount = async () => {
+      try {
+        setSkuCountLoading(true);
+        setSkuCountError(null);
+        const data = await getEcommerceSKUCountByGeography(filters);
+        if (data && typeof data === 'object') {
+          const next = { CA: 0, DE: 0, UK: 0, US: 0 };
+          ['CA','DE','UK','US'].forEach((k) => {
+            const v = Number(data[k]);
+            if (Number.isFinite(v)) next[k] = v;
+          });
+          setSkuCountGeo(next);
+        } else {
+          setSkuCountGeo({ CA: 0, DE: 0, UK: 0, US: 0 });
+        }
+      } catch (err) {
+        setSkuCountError('Failed to fetch SKU count by geography');
+        setSkuCountGeo({ CA: 0, DE: 0, UK: 0, US: 0 });
+        console.error('Error fetching SKU count by geography:', err);
+      } finally {
+        setSkuCountLoading(false);
+      }
+    };
+    fetchSkuCount();
   }, [filters]);
 
   // Fetch geography data
@@ -188,6 +221,7 @@ export default function ECommercePage() {
     { key: 'alert', label: 'Alert', placeholder: 'Select Alert', options: [
       { value: 'At Risk', label: 'At Risk' },
       { value: 'Safe', label: 'Safe' },
+      { value: 'Out of Stock', label: 'Out Of Stock' },
     ] },
     { key: 'skuType', label: 'SKU Type', placeholder: 'Select SKU Type', options: [
       { value: 'Critical', label: 'Critical' },
@@ -363,8 +397,11 @@ export default function ECommercePage() {
         onChange={handleFilterChange}
         onClear={handleClear}
       />
+ <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-red-400 border-2">
+    <h2 className="text-lg font-semibold text-black">Key Metrics</h2>
+  </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 space-x-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <MetricCard 
           title="Total Demand Unit" 
           value={formatValue(metricData.Demand)} 
@@ -390,9 +427,46 @@ export default function ECommercePage() {
           value={formatValue(metricData['Sale Lost'])} 
           icon={<FaMoneyBillWave className="text-pink-500" />} 
         />
+        <MetricCard 
+          title="AWD" 
+          value={formatValue(metricData['AWD'])} 
+          icon={<FaMoneyBillWave className="text-pink-500" />} 
+        />
+        <MetricCard 
+          title="AWD-Intransit" 
+          value={formatValue(metricData['AWD-Intransit'])} 
+          icon={<FaMoneyBillWave className="text-pink-500" />} 
+        />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-4 mb-8">
+      <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-yellow-400 border-2">
+    <h2 className="text-lg font-semibold text-black">SKU Count by Geography</h2>
+  </div>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+    <MetricCard 
+      title="United States (US)" 
+      value={formatValue(skuCountGeo.US, 'number', skuCountLoading, skuCountError)} 
+      icon={<Us className="w-10 h-10" />} 
+    />
+    <MetricCard 
+      title="United Kingdom (UK)" 
+      value={formatValue(skuCountGeo.UK, 'number', skuCountLoading, skuCountError)} 
+      icon={<Gb className="w-10 h-10" />} 
+    />
+    <MetricCard 
+      title="Canada (CA)" 
+      value={formatValue(skuCountGeo.CA, 'number', skuCountLoading, skuCountError)} 
+      icon={<Ca className="w-10 h-10" />} 
+    />
+    <MetricCard 
+      title="Germany (DE)" 
+      value={formatValue(skuCountGeo.DE, 'number', skuCountLoading, skuCountError)} 
+      icon={<De className="w-10 h-10" />} 
+    />
+  </div>
+
+      <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-green-400 border-2">
     <h2 className="text-lg font-semibold text-black">Demand Instock by Geography</h2>
   </div>
 

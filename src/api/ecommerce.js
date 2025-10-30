@@ -22,6 +22,11 @@ export const getEcommerceOverviewDIByGeography = async (params = {}) => {
   return response.data;
 };
 
+export const getEcommerceSKUCountByGeography = async (params = {}) => {
+  const response = await api.get('/ecommerce/overview/sku-count-by-geography', { params });
+  return response.data;
+};
+
 // Fetch Alert Count by Geography (for bar chart)
 export const getEcommerceAlertCountByGeography = async (params = {}) => {
   const response = await api.get('/ecommerce/overview/alert-count-by-geography', { params });
