@@ -19,8 +19,8 @@ export default function ECommerceLayout({ children }) {
 
   // Determine which tab should be active based on current path
   const getActiveTab = () => {
-    if (pathname === '/dashboard/e-commerce/pnl') {
-      return 1; // PNL tab
+    if (pathname && pathname.startsWith('/dashboard/e-commerce/pnl')) {
+      return 1; // PNL tab (includes subroutes like /pnl/business)
     }
     if (pathname === '/dashboard/e-commerce/inventory') {
       return 2; // Inventory tab

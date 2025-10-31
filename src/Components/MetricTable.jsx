@@ -31,7 +31,7 @@ const DEFAULT_COLUMNS = [
   },
 ];
 
-const MetricTable = ({ title, rows, columns }) => {
+const MetricTable = ({ title, rows, columns, showSearch = true, scrollable = true }) => {
   const [skuInput, setSkuInput] = useState('');
   const [appliedSku, setAppliedSku] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -134,6 +134,7 @@ const MetricTable = ({ title, rows, columns }) => {
   const [spacerWidth, setSpacerWidth] = useState(0);
 
   useEffect(() => {
+    if (!scrollable) return;
     const updateWidths = () => {
       const el = contentScrollRef.current;
       if (!el) return;
@@ -142,7 +143,7 @@ const MetricTable = ({ title, rows, columns }) => {
     updateWidths();
     window.addEventListener('resize', updateWidths);
     return () => window.removeEventListener('resize', updateWidths);
-  }, [tableColumns.length, data.nodes.length]);
+  }, [tableColumns.length, data.nodes.length, scrollable]);
 
   const syncFromSticky = (e) => {
     const target = e.currentTarget;
@@ -163,62 +164,72 @@ const MetricTable = ({ title, rows, columns }) => {
       <div>
         <h1 className="text-2xl font-bold text-black mb-2">{title}</h1>
       </div>
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          value={skuInput}
-          onChange={(e) => setSkuInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') setAppliedSku(skuInput);
-          }}
-          placeholder="Search by SKU"
-          className="w-full max-w-xs border rounded-md text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={() => setAppliedSku(skuInput)}
-          className="bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium px-4 py-2 rounded-md"
-        >
-          Search
-        </button>
-        {appliedSku && (
-          <button
-            onClick={() => {
-              setAppliedSku('');
-              setSkuInput('');
-            }}
-            className="bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium px-4 py-2 rounded-md"
+      {showSearch && (
+        <>
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={skuInput}
+              onChange={(e) => setSkuInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setAppliedSku(skuInput);
+              }}
+              placeholder="Search by SKU"
+              className="w-full max-w-xs border rounded-md text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={() => setAppliedSku(skuInput)}
+              className="bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium px-4 py-2 rounded-md"
+            >
+              Search
+            </button>
+            {appliedSku && (
+              <button
+                onClick={() => {
+                  setAppliedSku('');
+                  setSkuInput('');
+                }}
+                className="bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium px-4 py-2 rounded-md"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          {appliedSku && (
+            <div className="text-sm text-gray-600">
+              Showing {filteredNodes.length} of {baseNodes.length} results for "{appliedSku}"
+            </div>
+          )}
+        </>
+      )}
+      {scrollable ? (
+        <div className="max-h-96 overflow-y-auto relative">
+          <div
+            ref={contentScrollRef}
+            onScroll={syncFromContent}
+            className="overflow-x-auto scroll-container hide-x-scrollbar pb-4 w-full"
           >
-            Clear
-          </button>
-        )}
-      </div>
-      {appliedSku && (
-        <div className="text-sm text-gray-600">
-          Showing {filteredNodes.length} of {baseNodes.length} results for "{appliedSku}"
+            <div className="min-w-max">
+              <CompactTable columns={tableColumns} data={data} theme={theme} />
+            </div>
+          </div>
+          {/* right edge aesthetic border */}
+          <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-px bg-gray-200" />
+          <div className="sticky bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200">
+            <div
+              ref={hScrollRef}
+              onScroll={syncFromSticky}
+              className="overflow-x-auto scroll-container"
+            >
+              <div style={{ width: spacerWidth, height: 1 }} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <CompactTable columns={tableColumns} data={data} theme={theme} />
         </div>
       )}
-      <div className="max-h-96 overflow-y-auto relative">
-        <div
-          ref={contentScrollRef}
-          onScroll={syncFromContent}
-          className="overflow-x-auto scroll-container hide-x-scrollbar pb-4 w-full"
-        >
-          <div className="min-w-max">
-            <CompactTable columns={tableColumns} data={data} theme={theme} />
-          </div>
-        </div>
-        {/* right edge aesthetic border */}
-        <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-px bg-gray-200" />
-        <div className="sticky bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200">
-          <div
-            ref={hScrollRef}
-            onScroll={syncFromSticky}
-            className="overflow-x-auto scroll-container"
-          >
-            <div style={{ width: spacerWidth, height: 1 }} />
-          </div>
-        </div>
-      </div>
       <div className="flex items-center justify-end gap-2 pt-2">
         <button
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}

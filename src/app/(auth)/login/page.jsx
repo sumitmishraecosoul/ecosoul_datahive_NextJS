@@ -107,17 +107,17 @@ export default function Login() {
         </div>
 
         <div className="flex-1 flex items-center justify-center p-8">
-          <div className="bg-white/95 backdrop-blur-md p-8 rounded-2xl shadow-lg w-full max-w-md text-black">
+          <div className="bg-black/95 backdrop-blur-md p-8 rounded-2xl shadow-lg w-full max-w-md text-black">
             <div className="flex justify-center px-4">
               <img
-                src="/vectorLogo.jpg"
+                src="/vectorAILogo.svg"
                 alt="Vector AI Logo"
                 className="w-[10rem] h-[10rem]"
               />
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-black block mb-1 font-medium">Email</label>
+                <label className="text-white block mb-1 font-medium">Email</label>
                 <input
                   type="email"
                   name="email"
@@ -132,7 +132,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="text-black block mb-1 font-medium">Password</label>
+                <label className="text-white block mb-1 font-medium">Password</label>
                 <input
                   type="password"
                   name="password"
@@ -147,7 +147,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="text-black block mb-1 font-medium">Department</label>
+                <label className="text-white block mb-1 font-medium">Department</label>
                 <select
                   name="department"
                   value={formData.department}

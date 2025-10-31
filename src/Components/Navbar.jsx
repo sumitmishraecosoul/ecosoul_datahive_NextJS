@@ -45,7 +45,7 @@ const Navbar = () => {
         <div className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
 
             <div className="flex items-center">
-                <img src="/vectorLogo.jpg" alt="Vector AI Logo" className="w-20 h-auto"/>
+                <img src="/vectorAILogo.svg" alt="Vector AI Logo" className="w-20 h-auto"/>
             </div>
             <div className="flex items-center space-x-4">
                 <div className="relative" ref={dropdownRef}>

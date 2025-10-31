@@ -1,16 +1,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import FilterSelector from '../../../../Components/FilterSelector';
-import MetricCard from '../../../../Components/MetricCard';
-import MetricTable from '../../../../Components/MetricTable';
+import FilterSelector from '../../../../../Components/FilterSelector';
+import MetricCard from '../../../../../Components/MetricCard';
+import MetricTable from '../../../../../Components/MetricTable';
 import { FaChartLine, FaPercent, FaMoneyBillWave, FaWarehouse, FaBalanceScale } from 'react-icons/fa';
-import TabSelector from '../../../../Components/TabSelector';
-import { getPnlTransactionMetricData, getPnlTransactionTableData } from '../../../../api/pnl';
+import { getPnlBusinessMetricData, getPnlBusinessTableData } from '../../../../../api/pnl';
 
 export default function ECommercePnLPage() {
   const [filters, setFilters] = useState({ channel: '', monthYear: '' });
-  const [activeTabIndex, setActiveTabIndex] = useState(0); // 0: Transaction, 1: Business
-  const [txnMetrics, setTxnMetrics] = useState({
+  const [bizMetrics, setBizMetrics] = useState({
     cm1: null,
     cm2: null,
     cm3: null,
@@ -36,24 +34,20 @@ export default function ECommercePnLPage() {
     { key: 'monthYear', label: 'Month-Year', placeholder: 'YYYY-MM'}
   ];
 
-  const handleTabChange = (index, tabName) => {
-    setActiveTabIndex(index);
-  };
+  const handleTabChange = () => {};
 
-  // Load transaction metrics when Transaction tab is active
+  // Load business metrics and table whenever filters change
   useEffect(() => {
     const buildParams = () => {
       const params = {};
-      // Normalize country codes to API format
       if (filters?.channel) params.channel = filters.channel;
-      // Month-Year provided directly in YYYY-MM by user
       if (filters?.monthYear) params.monthYear = filters.monthYear;
       return params;
     };
-    const fetchTxnMetrics = async () => {
+    const fetchBizMetrics = async () => {
       try {
-        const data = await getPnlTransactionMetricData(buildParams());
-        setTxnMetrics({
+        const data = await getPnlBusinessMetricData(buildParams());
+        setBizMetrics({
           cm1: data?.cm1 ?? null,
           cm2: data?.cm2 ?? null,
           cm3: data?.cm3 ?? null,
@@ -65,9 +59,9 @@ export default function ECommercePnLPage() {
         // Fail silently to avoid UI disruption
       }
     };
-    const fetchTxnTable = async () => {
+    const fetchBizTable = async () => {
       try {
-        const data = await getPnlTransactionTableData(buildParams());
+        const data = await getPnlBusinessTableData(buildParams());
         const normalizeMap = {
           'FBA Fees': 'FBA Fee',
           'Selling fees': 'Selling Fee',
@@ -85,11 +79,9 @@ export default function ECommercePnLPage() {
         // Fail silently
       }
     };
-    if (activeTabIndex === 0) {
-      fetchTxnMetrics();
-      fetchTxnTable();
-    }
-  }, [activeTabIndex, filters]);
+    fetchBizMetrics();
+    fetchBizTable();
+  }, [filters]);
 
   const formatPct = (value) =>
     value === null || value === undefined ? '-' : `${Number(value).toFixed(2)}%`;
@@ -148,13 +140,13 @@ export default function ECommercePnLPage() {
       {/* KPI + Table Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: KPI Cards in 2-col grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <MetricCard title="CM1" value={formatPct(txnMetrics.cm1)} icon={<FaChartLine className="text-red-500" />} />
-          <MetricCard title="CM2" value={formatPct(txnMetrics.cm2)} icon={<FaPercent className="text-yellow-400" />} />
-          <MetricCard title="CM3" value={formatPct(txnMetrics.cm3)} icon={<FaPercent className="text-green-500" />} />
-          <MetricCard title="Ad Spend" value={formatPct(txnMetrics.adSpend)} icon={<FaMoneyBillWave className="text-blue-500" />} />
-          <MetricCard title="Storage Fee" value={formatPct(txnMetrics.storageFee)} icon={<FaWarehouse className="text-yellow-500" />} />
-          <MetricCard title="Selling Fee" value={formatPct(txnMetrics.sellingFee)} icon={<FaBalanceScale className="text-green-500" />} />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <MetricCard title="CM1" value={formatPct(bizMetrics.cm1)} icon={<FaChartLine className="text-red-500" />} />
+          <MetricCard title="CM2" value={formatPct(bizMetrics.cm2)} icon={<FaPercent className="text-yellow-400" />} />
+          <MetricCard title="CM3" value={formatPct(bizMetrics.cm3)} icon={<FaPercent className="text-green-500" />} />
+          <MetricCard title="Ad Spend" value={formatPct(bizMetrics.adSpend)} icon={<FaMoneyBillWave className="text-blue-500" />} />
+          <MetricCard title="Storage Fee" value={formatPct(bizMetrics.storageFee)} icon={<FaWarehouse className="text-yellow-500" />} />
+          <MetricCard title="Selling Fee" value={formatPct(bizMetrics.sellingFee)} icon={<FaBalanceScale className="text-green-500" />} />
         </div>
 
         {/* Right: Data Table */}
