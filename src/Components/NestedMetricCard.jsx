@@ -60,16 +60,9 @@ const NestedMetricCard = ({ title, metrics = [], count, columns }) => {
         )}
       </div>
 
+      {/* Responsive grid: 1 col < md, 2 cols for widths <1440px (including md/lg/xl), 3 cols for >=1440px */}
       <div
-        className={`grid gap-3 ${
-          computedColumns === 1
-            ? "grid-cols-1"
-            : computedColumns === 2
-            ? "grid-cols-2"
-            : computedColumns === 3
-            ? "grid-cols-3"
-            : "grid-cols-4"
-        }`}
+        className={`grid gap-3 grid-cols-1 md:grid-cols-2 min-[1440px]:grid-cols-3`}
       >
         {itemsToRender.map((m, index) => (
           <CompactMetric

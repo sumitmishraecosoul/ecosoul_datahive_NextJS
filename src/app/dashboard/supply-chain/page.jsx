@@ -57,15 +57,15 @@ export default function SupplyChainPage() {
       let processedMetrics = [];
       if (metricsResponse) {
         if (metricsResponse && typeof metricsResponse === 'object' && (metricsResponse.groups || metricsResponse.metrics)) {
-          const groups = metricsResponse.groups || {};
+        const groups = metricsResponse.groups || {};
           const m = metricsResponse.metrics || {};
           const groupNames = Object.keys(groups || {});
           if (groupNames.length > 0) {
             groupNames.forEach((groupName) => {
-              const groupItems = groups[groupName] || [];
+          const groupItems = groups[groupName] || [];
               groupItems.forEach((item) => {
-                processedMetrics.push({
-                  title: item,
+            processedMetrics.push({
+              title: item,
                   value: m[item] ?? '-',
                   group: groupName,
                 });
@@ -99,9 +99,9 @@ export default function SupplyChainPage() {
                     title: item,
                     value: m[item] ?? '-',
                     group: groupName,
-                  });
-                });
-              });
+            });
+          });
+        });
             } else {
               processedMetrics = Object.entries(m).map(([key, val]) => ({
                 title: key,
