@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import ecosoul_logo from "../../public/ecosoulLogo.svg";
+import { FiMenu, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FaWarehouse } from 'react-icons/fa6';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const Sidebar = () => {
   const router = useRouter();
@@ -23,22 +26,14 @@ const Sidebar = () => {
       id: 'supplychain',
       label: 'Supply Chain',
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <rect x="3" y="4" width="18" height="2" rx="1"/>
-          <rect x="3" y="8" width="18" height="2" rx="1"/>
-          <rect x="3" y="12" width="18" height="2" rx="1"/>
-        </svg>
+        <FaWarehouse size={20} />
       )
     },
     {
       id: 'ecommerce',
       label: 'E-Commerce',
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <rect x="3" y="4" width="18" height="2" rx="1"/>
-          <rect x="3" y="8" width="18" height="2" rx="1"/>
-          <rect x="3" y="12" width="18" height="2" rx="1"/>
-        </svg>
+        <FaShoppingCart size={20} />
       )
     },
     {
@@ -54,20 +49,45 @@ const Sidebar = () => {
     }
   ]
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const containerWidth = collapsed ? 'w-16' : 'w-64';
+  const navPadding = collapsed ? 'p-2' : 'p-4';
+
+  // Auto-collapse on small screens to improve responsiveness without altering UI content
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined') {
+        setCollapsed(window.innerWidth < 1024); // collapse on screens smaller than lg
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="bg-white shadow-2xl border-r-2 border-gray-200 w-64 h-screen flex flex-col">
-      <div className="p-4 border-b border-gray-200">  
-        <div className="w-full h-28 flex items-center justify-center">
-          <img src="/ecosoulLogo.svg" alt="EcoSoul" className='w-[10rem] h-auto object-contain' />
+    <div className={`bg-white shadow-2xl border-r-2 border-gray-200 ${containerWidth} h-screen flex flex-col transition-all duration-300`}> 
+      <div className="p-3 border-b border-gray-200 flex items-center justify-between">
+        <div className={`flex items-center justify-center ${collapsed ? 'w-full' : 'w-full'}`}>
+          <img src="/ecosoulLogo.svg" alt="EcoSoul" className={`${collapsed ? 'w-8' : 'w-[10rem]'} h-auto object-contain mx-auto`} />
         </div>
+        <button
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          onClick={() => setCollapsed(!collapsed)}
+          className="ml-2 p-2 rounded-md hover:bg-gray-100 text-gray-700"
+        >
+          {collapsed ? <FiChevronRight size={18} /> : <FiChevronLeft size={18} />}
+        </button>
       </div>
 
-      <nav className="flex-1 p-4 space-y-4">
+      <nav className={`flex-1 ${navPadding} space-y-4`}>
         {menuItems.map((item) => (
           <button
             key={item.id}
             onClick={() => handleItemClick(item.id)}
-            className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
+            title={item.label}
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2.5 rounded-lg transition-all duration-200 ${
               (item.id === 'supplychain' && pathname.startsWith('/dashboard/supply-chain')) ||
               (item.id === 'ecommerce' && pathname.startsWith('/dashboard/e-commerce')) ||
               (item.id === 'retail' && pathname.startsWith('/dashboard/retail'))
@@ -78,18 +98,21 @@ const Sidebar = () => {
             <div className="flex-shrink-0">
               {item.icon}
             </div>
-            
-            <span className="text-sm font-medium truncate">
-              {item.label}
-            </span>
+            {!collapsed && (
+              <span className="text-sm font-medium truncate">
+                {item.label}
+              </span>
+            )}
           </button>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
-        <div className="text-xs text-gray-500 text-center">
-          EcoSoul
-        </div>
+      <div className="p-3 border-t border-gray-200">
+        {!collapsed && (
+          <div className="text-xs text-gray-500 text-center">
+            EcoSoul
+          </div>
+        )}
       </div>
     </div>
   )
