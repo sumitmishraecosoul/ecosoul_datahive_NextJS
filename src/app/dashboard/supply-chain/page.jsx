@@ -4,18 +4,18 @@ import FilterSelector from '../../../Components/FilterSelector';
 import NestedMetricCard from '../../../Components/NestedMetricCard';
 import MetricTable from '../../../Components/MetricTable';
 import DownloadButton from '../../../Components/DownloadButton';
-import { getSCOverviewMetrics, getSCOverviewData, getSCOverviewDataDownload } from '../../../api/supplychain';
+import { getSCOverviewMetrics, getSCOverviewData, getSCOverviewDataDownload, getSCOverviewFilters } from '../../../api/supplychain';
 
 export default function SupplyChainPage() {
-  const [filters, setFilters] = useState({ sku: '', channel: '' });
+  const [filters, setFilters] = useState({ sku: '' });
+  const [skuOptions, setSkuOptions] = useState([]);
   const [metrics, setMetrics] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Filter configuration for the FilterSelector
   const filterConfig = [
-    { key: 'sku', label: 'SKU', placeholder: 'All SKUs' },
-    { key: 'channel', label: 'Channel', placeholder: 'All Channels' }
+    { key: 'sku', label: 'SKU', placeholder: 'All SKUs', options: skuOptions, searchable: true }
   ];
 
   // Fetch data when filters change
@@ -26,6 +26,20 @@ export default function SupplyChainPage() {
   // Initial data fetch on component mount
   useEffect(() => {
     fetchData();
+  }, []);
+
+  // Fetch filter options on mount
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const data = await getSCOverviewFilters();
+        const skuList = Array.isArray(data?.SKU) ? data.SKU : [];
+        setSkuOptions(skuList.map((v) => ({ value: v, label: v })));
+      } catch (e) {
+        setSkuOptions([]);
+      }
+    };
+    fetchFilters();
   }, []);
 
   const fetchData = async () => {
@@ -39,23 +53,90 @@ export default function SupplyChainPage() {
       console.log('Metrics response:', metricsResponse);
       console.log('Data response:', dataResponse);
       
-      // Process metrics response - API returns object with groups and metrics
+      // Normalize metrics into [{ title, value, group? }] for NestedMetricCard
       let processedMetrics = [];
-      if (metricsResponse && typeof metricsResponse === 'object') {
-        const groups = metricsResponse.groups || {};
-        const metrics = metricsResponse.metrics || {};
-        
-        // Convert groups and metrics to array format for NestedMetricCard
-        Object.keys(groups).forEach(groupName => {
-          const groupItems = groups[groupName] || [];
-          groupItems.forEach(item => {
-            processedMetrics.push({
-              title: item,
-              value: metrics[item] || 0,
-              group: groupName
+      if (metricsResponse) {
+        if (metricsResponse && typeof metricsResponse === 'object' && (metricsResponse.groups || metricsResponse.metrics)) {
+          const groups = metricsResponse.groups || {};
+          const m = metricsResponse.metrics || {};
+          const groupNames = Object.keys(groups || {});
+          if (groupNames.length > 0) {
+            groupNames.forEach((groupName) => {
+              const groupItems = groups[groupName] || [];
+              groupItems.forEach((item) => {
+                processedMetrics.push({
+                  title: item,
+                  value: m[item] ?? '-',
+                  group: groupName,
+                });
+              });
             });
-          });
-        });
+          } else {
+            // No groups provided; render all metrics under a Default group
+            processedMetrics = Object.entries(m).map(([key, val]) => ({
+              title: key,
+              value: val ?? '-',
+              group: 'Default',
+            }));
+          }
+        } else if (Array.isArray(metricsResponse)) {
+          // Some endpoints return an array with a single object containing { groups, metrics }
+          if (
+            metricsResponse.length > 0 &&
+            metricsResponse[0] &&
+            typeof metricsResponse[0] === 'object' &&
+            (metricsResponse[0].groups || metricsResponse[0].metrics)
+          ) {
+            const first = metricsResponse[0];
+            const groups = first.groups || {};
+            const m = first.metrics || {};
+            const groupNames = Object.keys(groups || {});
+            if (groupNames.length > 0) {
+              groupNames.forEach((groupName) => {
+                const groupItems = groups[groupName] || [];
+                groupItems.forEach((item) => {
+                  processedMetrics.push({
+                    title: item,
+                    value: m[item] ?? '-',
+                    group: groupName,
+                  });
+                });
+              });
+            } else {
+              processedMetrics = Object.entries(m).map(([key, val]) => ({
+                title: key,
+                value: val ?? '-',
+                group: 'Default',
+              }));
+            }
+          } else {
+            // Fallback: generic array of metrics
+            processedMetrics = metricsResponse.map((entry, idx) => {
+              if (entry && typeof entry === 'object') {
+                const title = entry.title || entry.name || entry.label || entry.metric || `Metric ${idx + 1}`;
+                const value = entry.value ?? entry.count ?? entry.qty ?? entry.quantity ?? entry.metric_value ?? '-';
+                const group = entry.group || entry.category || undefined;
+                return { title, value, group };
+              }
+              return { title: `Metric ${idx + 1}`, value: entry ?? '-' };
+            });
+          }
+        } else if (typeof metricsResponse === 'object') {
+          const nested = metricsResponse.data || metricsResponse.metrics;
+          if (Array.isArray(nested)) {
+            processedMetrics = nested.map((entry, idx) => {
+              if (entry && typeof entry === 'object') {
+                const title = entry.title || entry.name || entry.label || entry.metric || `Metric ${idx + 1}`;
+                const value = entry.value ?? entry.count ?? entry.qty ?? entry.quantity ?? entry.metric_value ?? '-';
+                const group = entry.group || entry.category || undefined;
+                return { title, value, group };
+              }
+              return { title: `Metric ${idx + 1}`, value: entry ?? '-' };
+            });
+          } else {
+            processedMetrics = Object.entries(metricsResponse).map(([k, v]) => ({ title: k, value: v ?? '-' }));
+          }
+        }
       }
       
       // Process data response - API returns array of rows
@@ -144,7 +225,7 @@ export default function SupplyChainPage() {
         config={filterConfig}
         options={{}}
         onChange={handleFilterChange}
-        onClear={() => setFilters({ sku: '', channel: '' })}
+        onClear={() => setFilters({ sku: '' })}
       />
 
       {/* Stock Summary Cards */}
@@ -208,6 +289,7 @@ export default function SupplyChainPage() {
           title=""
           rows={tableData}
           columns={tableColumns}
+          showSearch={false}
         />
         {loading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">

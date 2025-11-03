@@ -4,7 +4,7 @@ import FilterSelector from '../../../../Components/FilterSelector';
 import MetricCard from '../../../../Components/MetricCard';
 import MetricTable from '../../../../Components/MetricTable';
 import DownloadButton from '../../../../Components/DownloadButton';
-import { getQuickCommerceMetrics, getQuickCommerceData, getQuickCommerceDataDownload } from '../../../../api/supplychain';
+import { getQuickCommerceMetrics, getQuickCommerceData, getQuickCommerceDataDownload, getQuickCommerceFilters } from '../../../../api/supplychain';
 import { 
   FaBox, 
   FaWarehouse, 
@@ -34,15 +34,17 @@ export default function QuickCommercePage() {
     'Required Qty': <FaMinus className="text-red-600" />,
     'Sellable after Required Qty': <FaShoppingCart className="text-red-600" />,
   };
-  const [filters, setFilters] = useState({ sku: '', country: '' });
+  const [filters, setFilters] = useState({ sku: '', location: '' });
   const [metrics, setMetrics] = useState([]);
+  const [skuOptions, setSkuOptions] = useState([]);
+  const [locationOptions, setLocationOptions] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Filter configuration for the FilterSelector
   const filterConfig = [
-    { key: 'sku', label: 'SKU', placeholder: 'e.g. CRCBOZ10NL' },
-    { key: 'country', label: 'Country', placeholder: 'e.g. Bangalore' }
+    { key: 'sku', label: 'SKU', placeholder: 'e.g. CRCBOZ10NL', options: skuOptions, searchable: true },
+    { key: 'location', label: 'Location', placeholder: 'e.g. Bangalore', options: locationOptions, searchable: true }
   ];
 
   // Fetch data when filters change
@@ -53,6 +55,23 @@ export default function QuickCommercePage() {
   // Initial data fetch on component mount
   useEffect(() => {
     fetchData();
+  }, []);
+
+  // Fetch filter options on mount
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const data = await getQuickCommerceFilters();
+        const skuList = Array.isArray(data?.SKU) ? data.SKU : [];
+        const locList = Array.isArray(data?.Location) ? data.Location : [];
+        setSkuOptions(skuList.map((v) => ({ value: v, label: v })));
+        setLocationOptions(locList.map((v) => ({ value: v, label: v })));
+      } catch (e) {
+        setSkuOptions([]);
+        setLocationOptions([]);
+      }
+    };
+    fetchFilters();
   }, []);
 
   const fetchData = async () => {
@@ -182,10 +201,10 @@ export default function QuickCommercePage() {
       )
     },
     { 
-      label: 'Country', 
+      label: 'Location', 
       renderCell: (item) => (
         <span className="font-medium text-gray-700">
-          {item['Country'] || item.country || '-'}
+          {item['Location'] || item.location || '-'}
         </span>
       )
     },
@@ -350,7 +369,7 @@ export default function QuickCommercePage() {
         config={filterConfig}
         options={{}}
         onChange={handleFilterChange}
-        onClear={() => setFilters({ sku: '', country: '' })}
+        onClear={() => setFilters({ sku: '', location: '' })}
       />
 
       {/* Metric Cards Grid */}

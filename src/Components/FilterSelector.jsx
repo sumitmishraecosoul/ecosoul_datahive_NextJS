@@ -45,7 +45,22 @@ const FilterSelector = ({
         {config.map((filter) => (
           <div key={filter.key} className='flex flex-col min-w-0'>
             <label className='text-sm font-medium text-gray-700 mb-2'>{filter.label}</label>
-            {Array.isArray(filter.options) && filter.options.length > 0 ? (
+            {Array.isArray(filter.options) && filter.options.length > 0 && filter.searchable ? (
+              <>
+                <input
+                  list={`${filter.key}-datalist`}
+                  className={`border border-gray-300 ${enhancedKeys.includes(filter.key) ? 'rounded-xl' : 'rounded-lg'} px-3 py-2 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder:text-gray-400 hover:border-gray-400 shadow-sm`}
+                  placeholder={filter.placeholder || `Select ${filter.label}`}
+                  value={selectedFilters[filter.key]?.value || ''}
+                  onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}
+                />
+                <datalist id={`${filter.key}-datalist`}>
+                  {filter.options.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </datalist>
+              </>
+            ) : Array.isArray(filter.options) && filter.options.length > 0 ? (
               <select
                 className={`border border-gray-300 ${enhancedKeys.includes(filter.key) ? 'rounded-xl' : 'rounded-lg'} px-3 py-2 bg-white text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none cursor-pointer placeholder:text-gray-400 hover:border-gray-400 shadow-sm`}
                 value={selectedFilters[filter.key]?.value || ''}
