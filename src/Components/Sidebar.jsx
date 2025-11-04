@@ -3,7 +3,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import ecosoul_logo from "../../public/ecosoulLogo.svg";
 import { FiMenu, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaWarehouse } from 'react-icons/fa6';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaShoppingBasket } from 'react-icons/fa';
 
 const Sidebar = () => {
   const router = useRouter();
@@ -53,12 +53,13 @@ const Sidebar = () => {
       id:'retail',
       label: 'Retail',
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <rect x="3" y="4" width="18" height="2" rx="1"/>
-          <rect x="3" y="8" width="18" height="2" rx="1"/>
-          <rect x="3" y="12" width="18" height="2" rx="1"/>
-        </svg>
-      )
+        <FaShoppingBasket size={20} />
+      ),
+      children: [
+        { id: 'retail-overview', label: 'Overview', href: '/dashboard/retail/overview' },
+        { id: 'retail-walmart', label: 'Walmart', href: '/dashboard/retail/walmart' },
+        { id: 'retail-ds', label: 'Demand and Supply', href: '/dashboard/retail/demand-and-supply' },
+      ]
     }
   ]
 
