@@ -38,12 +38,24 @@ export default function WalmartPage() {
             <MetricTable
                 title="Sales"
                 rows={[]}
-                columns={[]}
+                columns={[
+                    { label: 'Field', renderCell: (item) => item.field || '-' },
+                    { label: 'Value', renderCell: (item) => item.value || '-' },
+                ]}
+                showSearch={false}
             />
             <MetricTable
                 title="Weekly PO Trends"
                 rows={[]}
-                columns={[]}
+                columns={[
+                    { label: 'Col 1', renderCell: (item) => item.c1 || '-' },
+                    { label: 'Col 2', renderCell: (item) => item.c2 || '-' },
+                    { label: 'Col 3', renderCell: (item) => item.c3 || '-' },
+                    { label: 'Col 4', renderCell: (item) => item.c4 || '-' },
+                    { label: 'Col 5', renderCell: (item) => item.c5 || '-' },
+                    { label: 'Col 6', renderCell: (item) => item.c6 || '-' },
+                ]}
+                showSearch={false}
             />
         </div>
 

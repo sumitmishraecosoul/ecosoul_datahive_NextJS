@@ -19,7 +19,6 @@ const FilterSelector = ({
   className = '',
 }) => {
   const [selectedFilters, setSelectedFilters] = useState({});
-  const enhancedKeys = ['country', 'alert', 'skuType', 'status'];
 
   const handleFilterChange = (filterKey, selectedOption) => {
     const next = { ...selectedFilters, [filterKey]: selectedOption };
@@ -49,7 +48,7 @@ const FilterSelector = ({
               <>
                 <input
                   list={`${filter.key}-datalist`}
-                  className={`border border-gray-300 ${enhancedKeys.includes(filter.key) ? 'rounded-xl' : 'rounded-lg'} px-3 py-2 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder:text-gray-400 hover:border-gray-400 shadow-sm`}
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder:text-gray-400 hover:border-gray-400 shadow-sm"
                   placeholder={filter.placeholder || `Select ${filter.label}`}
                   value={selectedFilters[filter.key]?.value || ''}
                   onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}
@@ -62,7 +61,7 @@ const FilterSelector = ({
               </>
             ) : Array.isArray(filter.options) && filter.options.length > 0 ? (
               <select
-                className={`border border-gray-300 ${enhancedKeys.includes(filter.key) ? 'rounded-xl' : 'rounded-lg'} px-3 py-2 bg-white text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none cursor-pointer placeholder:text-gray-400 hover:border-gray-400 shadow-sm`}
+                className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none cursor-pointer placeholder:text-gray-400 hover:border-gray-400 shadow-sm"
                 value={selectedFilters[filter.key]?.value || ''}
                 onChange={(e) => handleFilterChange(filter.key, { value: e.target.value, label: e.target.value })}
               >

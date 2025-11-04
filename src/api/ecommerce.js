@@ -39,3 +39,9 @@ export const getEcommerceSKUTypeByGeography = async (params = {}) => {
   return response.data;
 };
 
+// Fetch Ecommerce Overview filters
+export const getEcommerceOverviewFilters = async () => {
+  const response = await api.get('/ecommerce/overview/filters');
+  return response.data;
+};
+

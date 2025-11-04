@@ -4,7 +4,7 @@ import FilterSelector from '../../../Components/FilterSelector';
 import MetricCard from '../../../Components/MetricCard';
 import MetricTable from '../../../Components/MetricTable';
 import { FaShoppingCart, FaWarehouse, FaTruckMoving, FaMoneyBillWave, FaChartLine } from 'react-icons/fa';
-import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography, getEcommerceSKUCountByGeography } from '../../../api/ecommerce';
+import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography, getEcommerceSKUCountByGeography, getEcommerceOverviewFilters } from '../../../api/ecommerce';
 import BarChart from '../../../Components/BarChart';
 import { Us, De, Gb, Ca } from 'react-flags-select';
 
@@ -49,6 +49,42 @@ export default function ECommercePage() {
     { name: 'Critical', data: [0,0,0,0] },
     { name: 'Non Critical', data: [0,0,0,0] },
   ]);
+  
+  // Filter options state
+  const [skuOptions, setSkuOptions] = useState([]);
+  const [materialOptions, setMaterialOptions] = useState([]);
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [alertOptions, setAlertOptions] = useState([]);
+  const [skuTypeOptions, setSkuTypeOptions] = useState([]);
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [monthYearOptions, setMonthYearOptions] = useState([]);
+
+  // Fetch filter options on mount
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const data = await getEcommerceOverviewFilters();
+        const skuList = Array.isArray(data?.SKU) ? data.SKU : [];
+        const materialList = Array.isArray(data?.Material) ? data.Material : [];
+        const countryList = Array.isArray(data?.Country) ? data.Country : [];
+        const alertList = Array.isArray(data?.Alert) ? data.Alert : [];
+        const skuTypeList = Array.isArray(data?.SKU_Type) ? data.SKU_Type : [];
+        const statusList = Array.isArray(data?.Status) ? data.Status : [];
+        const monthYearList = Array.isArray(data?.Month_Year) ? data.Month_Year : [];
+        
+        setSkuOptions(skuList.map((v) => ({ value: v, label: v })));
+        setMaterialOptions(materialList.map((v) => ({ value: v, label: v })));
+        setCountryOptions(countryList.map((v) => ({ value: v, label: v })));
+        setAlertOptions(alertList.map((v) => ({ value: v, label: v })));
+        setSkuTypeOptions(skuTypeList.map((v) => ({ value: v, label: v })));
+        setStatusOptions(statusList.map((v) => ({ value: v, label: v })));
+        setMonthYearOptions(monthYearList.map((v) => ({ value: v, label: v })));
+      } catch (e) {
+        console.error('Error fetching filter options:', e);
+      }
+    };
+    fetchFilters();
+  }, []);
 
   const handleFilterChange = (newFilters) => {
     const simple = {};
@@ -209,28 +245,13 @@ export default function ECommercePage() {
   }, [filters]);
 
   const filterConfig = [
-    { key: 'sku', label: 'SKU', placeholder: 'e.g. CRCBOZ10NL' },
-    { key: 'material', label: 'Material', placeholder: 'e.g. Palm Leaf' },
-    { key: 'monthYear', label: 'Year-Month', placeholder: 'e.g. 2025-10' },
-    { key: 'country', label: 'Country', placeholder: 'Select Country', options: [
-      { value: 'US', label: 'US' },
-      { value: 'UK', label: 'UK' },
-      { value: 'CA', label: 'CA' },
-      { value: 'GE', label: 'GE' },
-    ] },
-    { key: 'alert', label: 'Alert', placeholder: 'Select Alert', options: [
-      { value: 'At Risk', label: 'At Risk' },
-      { value: 'Safe', label: 'Safe' },
-      { value: 'Out of Stock', label: 'Out Of Stock' },
-    ] },
-    { key: 'skuType', label: 'SKU Type', placeholder: 'Select SKU Type', options: [
-      { value: 'Critical', label: 'Critical' },
-      { value: 'Non Critical', label: 'Non Critical' },
-    ] },
-    { key: 'status', label: 'Status', placeholder: 'Select Status', options: [
-      { value: 'Exisiting', label: 'Exisiting' },
-      { value: 'New', label: 'New' },
-    ] }
+    { key: 'sku', label: 'SKU', placeholder: 'Select SKU', options: skuOptions, searchable: true },
+    { key: 'material', label: 'Material', placeholder: 'Select Material', options: materialOptions, searchable: true },
+    { key: 'monthYear', label: 'Year-Month', placeholder: 'Select Month-Year', options: monthYearOptions, searchable: true },
+    { key: 'country', label: 'Country', placeholder: 'Select Country', options: countryOptions, searchable: true },
+    { key: 'alert', label: 'Alert', placeholder: 'Select Alert', options: alertOptions, searchable: true },
+    { key: 'skuType', label: 'SKU Type', placeholder: 'Select SKU Type', options: skuTypeOptions, searchable: true },
+    { key: 'status', label: 'Status', placeholder: 'Select Status', options: statusOptions, searchable: true }
   ];
 
   // Helper function to format values
