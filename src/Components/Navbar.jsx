@@ -4,6 +4,7 @@ import { IoIosNotifications } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
 // import vectorLogo from "../../public/vectorLogo.jpg";
+import { logout as apiLogout } from '../api/auth';
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -23,14 +24,14 @@ const Navbar = () => {
         };
     }, []);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try { await apiLogout(); } catch {}
         // Clear any stored authentication data
         localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
-        
         // Navigate to login page
         router.push('/login');
-        
         // Close dropdown
         setIsDropdownOpen(false);
     };

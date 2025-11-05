@@ -3,7 +3,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import ecosoul_logo from "../../public/ecosoulLogo.svg";
 import { FiMenu, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaWarehouse } from 'react-icons/fa6';
-import { FaShoppingCart, FaShoppingBasket } from 'react-icons/fa';
+import { FaShoppingCart, FaShoppingBasket, FaUserShield } from 'react-icons/fa';
 
 const Sidebar = () => {
   const router = useRouter();
@@ -20,6 +20,8 @@ const Sidebar = () => {
       router.push('/dashboard/e-commerce');
     } else if (itemId === 'retail') {
       router.push('/dashboard/retail');
+    } else if (itemId === 'admin') {
+      router.push('/dashboard/admin');
     } else {
       router.push(`/${itemId}`);
     }
@@ -60,6 +62,15 @@ const Sidebar = () => {
         { id: 'retail-walmart', label: 'Walmart', href: '/dashboard/retail/walmart' },
         { id: 'retail-ds', label: 'Demand and Supply', href: '/dashboard/retail/demand-and-supply' },
       ]
+    },
+    // Admin panel (no dropdowns)
+    {
+      id: 'admin',
+      label: 'Admin',
+      icon: (
+        <FaUserShield size={20} />
+      )
+      // no children -> click navigates to /admin
     }
   ]
 
@@ -92,6 +103,28 @@ const Sidebar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Determine visible sections based on department
+  const [visibleIds, setVisibleIds] = useState(null);
+  useEffect(() => {
+    try {
+      const userRaw = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+      if (!userRaw) return setVisibleIds([]);
+      const user = JSON.parse(userRaw);
+      const dept = user?.department;
+      if (dept === 1) setVisibleIds(['supplychain', 'ecommerce', 'retail', 'admin']);
+      else if (dept === 2) setVisibleIds(['retail']);
+      else if (dept === 3) setVisibleIds(['ecommerce']);
+      else if (dept === 4) setVisibleIds(['supplychain']);
+      else setVisibleIds([]);
+    } catch {
+      setVisibleIds([]);
+    }
+  }, []);
+
+  const itemsToRender = Array.isArray(visibleIds)
+    ? menuItems.filter((i) => visibleIds.includes(i.id))
+    : menuItems; // while loading, keep current UI unchanged
+
   return (
     <div className={`bg-gradient-to-b from-white to-gray-50 shadow-xl border-r border-gray-200 ${containerWidth} h-screen flex flex-col transition-[width] duration-300 ease-in-out`}> 
       <div className="p-3 border-b border-gray-100 flex items-center justify-between">
@@ -108,7 +141,7 @@ const Sidebar = () => {
       </div>
 
       <nav className={`flex-1 ${navPadding} space-y-3`}>
-        {menuItems.map((item) => (
+        {itemsToRender.map((item) => (
           <div key={item.id} className="relative group">
             <button
               onClick={() => item.children && !collapsed ? toggleOpen(item.id) : handleItemClick(item.id)}
@@ -116,7 +149,8 @@ const Sidebar = () => {
               className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2.5 rounded-xl transition-colors duration-200 border ${
                 (item.id === 'supplychain' && pathname.startsWith('/dashboard/supply-chain')) ||
                 (item.id === 'ecommerce' && pathname.startsWith('/dashboard/e-commerce')) ||
-                (item.id === 'retail' && pathname.startsWith('/dashboard/retail'))
+              (item.id === 'retail' && pathname.startsWith('/dashboard/retail')) ||
+              (item.id === 'admin' && pathname.startsWith('/dashboard/admin'))
                   ? 'bg-teal-50 text-teal-700 border-teal-100'
                   : 'bg-white/70 text-gray-700 hover:bg-gray-50 border-gray-200'
               }`}
@@ -156,7 +190,8 @@ const Sidebar = () => {
 
             {((item.id === 'supplychain' && pathname.startsWith('/dashboard/supply-chain')) ||
               (item.id === 'ecommerce' && pathname.startsWith('/dashboard/e-commerce')) ||
-              (item.id === 'retail' && pathname.startsWith('/dashboard/retail')))
+              (item.id === 'retail' && pathname.startsWith('/dashboard/retail')) ||
+              (item.id === 'admin' && pathname.startsWith('/dashboard/admin')))
               && (<span className="absolute left-0 top-0 bottom-0 w-1 bg-teal-500 rounded-r-full" />)}
 
           </div>

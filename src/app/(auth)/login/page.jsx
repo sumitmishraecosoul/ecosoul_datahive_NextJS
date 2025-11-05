@@ -6,6 +6,7 @@ import { BorderBeam } from "../../../Components/BorderBeam";
 import Orb from "../../../Components/Orb";
 import LoginBackground from "../../../Components/LoginBackground";
 import { LiquidGlassCard } from "../../../Components/LiquidGlass";
+import { login as loginApi } from "../../../api/auth";
 // import vectorLogo from "../../../public/vectorLogo.jpg";
 
 export default function Login() {
@@ -14,12 +15,11 @@ export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    department: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const departments = ["Supply Chain","E-Commerce","Retail"];
+  // Removed department field — not required for login
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,20 +39,44 @@ export default function Login() {
       newErrors.password = "Password is required";
     }
 
-    if (!formData.department) {
-      newErrors.department = "Please select a department";
-    }
+    // Department validation removed
 
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Login Success:", formData);
-      localStorage.setItem("isLoggedIn", "true");
-      router.push("/dashboard");
+      try {
+        const data = await loginApi({ email: formData.email, password: formData.password });
+        // Persist tokens and user for subsequent API calls and RBAC
+        if (data?.accessTokenHRMS) {
+          localStorage.setItem('token', data.accessTokenHRMS);
+        }
+        if (data?.refreshTokenHRMS) {
+          localStorage.setItem('refreshToken', data.refreshTokenHRMS);
+        }
+        if (data?.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+
+        // Redirect based on department
+        const department = data?.user?.department;
+        if (department === 1) {
+          router.push('/dashboard');
+        } else if (department === 2) {
+          router.push('/dashboard/retail');
+        } else if (department === 3) {
+          router.push('/dashboard/e-commerce');
+        } else if (department === 4) {
+          router.push('/dashboard/supply-chain');
+        } else {
+          router.push('/dashboard');
+        }
+      } catch (err) {
+        setErrors({ form: err?.response?.data?.message || 'Login failed. Please try again.' });
+      }
     } else {
       setErrors(validationErrors);
     }
@@ -144,7 +168,6 @@ export default function Login() {
                   <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
-
               <div>
                 <label className="block mb-1.5 text-sm font-medium text-gray-800">Password</label>
                 <input
@@ -161,26 +184,11 @@ export default function Login() {
                 )}
               </div>
 
-              <div>
-                <label className="block mb-1.5 text-sm font-medium text-gray-800">Department</label>
-                <select
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-gray-300 bg-white/95 px-4 py-3 text-gray-900 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                  required
-                >
-                  <option value="">Select Department</option>
-                  {departments.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
-                    </option>
-                  ))}
-                </select>
-                {errors.department && (
-                  <p className="text-red-500 text-sm mt-1">{errors.department}</p>
-                )}
-              </div>
+              {errors.form && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.form}
+                </p>
+              )}
 
               <button
                 type="submit"
