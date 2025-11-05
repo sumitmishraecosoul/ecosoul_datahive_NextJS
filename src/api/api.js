@@ -14,9 +14,18 @@ const api = axios.create({
   },
 });
 
-// Do NOT attach Authorization headers; backend uses cookies only
+// Attach Authorization header with token from localStorage
 api.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    // Only attach token on client-side (SSR-safe)
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
 
