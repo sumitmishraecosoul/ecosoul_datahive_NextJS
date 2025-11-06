@@ -3,9 +3,10 @@ import { useRouter } from 'next/navigation';
 import { IoIosNotifications } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
+// Notes button moved to dashboard layout
+import { useToast } from './toast';
 // import vectorLogo from "../../public/vectorLogo.jpg";
 import { logout as apiLogout } from '../api/auth';
-import { useToast } from './toast';
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -86,3 +87,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

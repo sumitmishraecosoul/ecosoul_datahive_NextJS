@@ -2,6 +2,8 @@
 import React, { useEffect } from 'react';
 import Navbar from '../../Components/Navbar';
 import Sidebar from '../../Components/Sidebar';
+import { PopoverRoot, PopoverTrigger, PopoverContent, NotesPanel } from '../../Components/PopNotes';
+import { FaRegStickyNote } from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function DashboardLayout({ children }) {
@@ -70,6 +72,17 @@ export default function DashboardLayout({ children }) {
         <main className="flex-1 ml-0 overflow-y-auto">
           <div className="p-6">
             {children}
+          </div>
+          {/* Floating Notes Button */}
+          <div className="fixed bottom-6 right-6 z-[9997]">
+            <PopoverRoot>
+              <PopoverTrigger className="rounded-full shadow-lg bg-teal-500 hover:bg-teal-600 text-white w-14 h-14 flex items-center justify-center">
+                <FaRegStickyNote size={20} />
+              </PopoverTrigger>
+              <PopoverContent>
+                <NotesPanel />
+              </PopoverContent>
+            </PopoverRoot>
           </div>
         </main>
       </div>
