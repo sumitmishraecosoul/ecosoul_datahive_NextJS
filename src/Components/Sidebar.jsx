@@ -61,6 +61,7 @@ const Sidebar = () => {
         { id: 'retail-overview', label: 'Overview', href: '/dashboard/retail/overview' },
         { id: 'retail-walmart', label: 'Walmart', href: '/dashboard/retail/walmart' },
         { id: 'retail-ds', label: 'Demand and Supply', href: '/dashboard/retail/demand-and-supply' },
+        { id: 'retail-stores', label: 'Retail Stores', href: '/dashboard/retail/stores' },
       ]
     },
     // Admin panel (no dropdowns)
