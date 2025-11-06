@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import FilterSelector from '../../../Components/FilterSelector';
 import NestedMetricCard from '../../../Components/NestedMetricCard';
 import MetricTable from '../../../Components/MetricTable';
-import DownloadButton from '../../../Components/DownloadButton';
+import { Button } from '../../../Components/Button';
 import { getSCOverviewMetrics, getSCOverviewData, getSCOverviewDataDownload, getSCOverviewFilters } from '../../../api/supplychain';
 
 export default function SupplyChainPage() {
@@ -211,12 +211,13 @@ export default function SupplyChainPage() {
       {/* Header with Download Button */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Supply Chain Overview</h1>
-        <DownloadButton 
+        <Button 
           onClick={handleDownload}
           className="ml-4"
+          showDownloadIcon
         >
           Download CSV
-        </DownloadButton>
+        </Button>
       </div>
 
       {/* Inventory Filters */}

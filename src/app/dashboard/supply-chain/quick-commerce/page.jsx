@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import FilterSelector from '../../../../Components/FilterSelector';
 import MetricCard from '../../../../Components/MetricCard';
 import MetricTable from '../../../../Components/MetricTable';
-import DownloadButton from '../../../../Components/DownloadButton';
+import { Button } from '../../../../Components/Button';
 import { getQuickCommerceMetrics, getQuickCommerceData, getQuickCommerceDataDownload, getQuickCommerceFilters } from '../../../../api/supplychain';
 import { 
   FaBox, 
@@ -355,12 +355,13 @@ export default function QuickCommercePage() {
       {/* Header with Download Button */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Quick Commerce</h1>
-        <DownloadButton 
+        <Button 
           onClick={handleDownload}
           className="ml-4"
+          showDownloadIcon
         >
           Download CSV
-        </DownloadButton>
+        </Button>
       </div>
 
       {/* Filters Section */}

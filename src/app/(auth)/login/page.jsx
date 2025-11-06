@@ -8,6 +8,7 @@ import LoginBackground from "../../../Components/LoginBackground";
 import { LiquidGlassCard } from "../../../Components/LiquidGlass";
 import { login as loginApi } from "../../../api/auth";
 import { useToast } from "../../../Components/toast";
+import { Button } from "../../../Components/Button";
 // import vectorLogo from "../../../public/vectorLogo.jpg";
 
 export default function Login() {
@@ -157,7 +158,7 @@ export default function Login() {
                 className="h-24 w-24"
               />
             </div>
-            <form onSubmit={handleSubmit} className="relative z-40 space-y-5">
+            <form className="relative z-40 space-y-5">
               <div>
                 <label className="block mb-1.5 text-sm font-medium text-gray-800">Email</label>
                 <input
@@ -191,12 +192,13 @@ export default function Login() {
 
               {/* Inline form error removed in favor of toast notifications */}
 
-              <button
-                type="submit"
+              <Button
                 className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                onClick={handleSubmit}
+                type="button"
               >
                 Sign in
-              </button>
+              </Button>
             </form>
           </LiquidGlassCard>
         </div>

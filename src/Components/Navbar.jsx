@@ -47,7 +47,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
+        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 h-16 flex items-center justify-between px-6 shadow-[0_8px_20px_-12px_rgba(0,0,0,0.15)]">
 
             <div className="flex items-center">
                 <img src="/vectorAILogo2.svg" alt="Vector AI Logo" className="w-[4rem] h-[4rem] ml-10 mb-1"/>

@@ -13,7 +13,7 @@ const MetricCard = (
   }
 ) => {
   return (
-    <div className="flex items-center justify-between bg-white rounded-xl shadow-md p-4 w-[15rem] max-w-xs hover:scale-105 transition-all duration-300 shadow-xl">
+    <div className="flex items-center justify-between bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] p-5 w-[15rem] max-w-xs hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-12px_rgba(0,0,0,0.2)] transition-all duration-300">
       <div className="flex flex-col gap-2">
         <h3 className="text-sm font-medium text-gray-600">{title}</h3>
         <p className="text-2xl font-bold text-gray-900">{value}</p>
@@ -24,7 +24,7 @@ const MetricCard = (
           </div>
         )}
       </div>
-      <div className="flex w-[3rem] h-[3rem] items-center justify-center bg-blue-100 rounded-lg p-2">
+      <div className="flex w-[3rem] h-[3rem] items-center justify-center rounded-xl p-2  border border-gray-400 border-2">
         {icon}
       </div>
     </div>

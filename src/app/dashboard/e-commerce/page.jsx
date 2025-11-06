@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import FilterSelector from '../../../Components/FilterSelector';
 import MetricCard from '../../../Components/MetricCard';
 import MetricTable from '../../../Components/MetricTable';
-import DownloadButton from '../../../Components/DownloadButton';
+import { Button } from '../../../Components/Button';
 import { FaShoppingCart, FaWarehouse, FaTruckMoving, FaMoneyBillWave, FaChartLine } from 'react-icons/fa';
 import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography, getEcommerceSKUCountByGeography, getEcommerceOverviewFilters } from '../../../api/ecommerce';
 import BarChart from '../../../Components/BarChart';
@@ -437,7 +437,7 @@ export default function ECommercePage() {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-      toast.success('Download started');
+      toast.success('Download completed');
     } catch (e) {
       console.error('Error downloading file:', e);
       toast.error('Download failed. Please try again.');
@@ -452,12 +452,13 @@ export default function ECommercePage() {
       {/* Header with Download Button */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">E-Commerce Overview</h1>
-        <DownloadButton 
+        <Button 
           onClick={handleDownload}
           className="ml-4"
+          showDownloadIcon
         >
           Download CSV
-        </DownloadButton>
+        </Button>
       </div>
 
       <FilterSelector

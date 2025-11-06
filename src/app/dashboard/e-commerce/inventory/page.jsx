@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import MetricTable from '../../../../Components/MetricTable';
-import DownloadButton from '../../../../Components/DownloadButton';
+import { Button } from '../../../../Components/Button';
 import { getEcommerceInventoryData } from '../../../../api/ecommerce';
 import DEV_URL from '../../../../config/config';
 import { useToast } from '../../../../Components/toast';
@@ -67,7 +67,7 @@ export default function ECommerceInventoryPage() {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-      toast.success('Download started');
+      toast.success('Download completed');
     } catch (error) {
       console.error('Error downloading file:', error);
       toast.error('Download failed. Please try again.');
@@ -79,12 +79,13 @@ export default function ECommerceInventoryPage() {
       {/* Header with Download Button */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Inventory</h1>
-        <DownloadButton 
+        <Button 
           onClick={handleDownload}
           className="ml-4"
+          showDownloadIcon
         >
           Download CSV
-        </DownloadButton>
+        </Button>
       </div>
 
       <MetricTable rows={rows} columns={columns} />
