@@ -7,10 +7,12 @@ import Orb from "../../../Components/Orb";
 import LoginBackground from "../../../Components/LoginBackground";
 import { LiquidGlassCard } from "../../../Components/LiquidGlass";
 import { login as loginApi } from "../../../api/auth";
+import { useToast } from "../../../Components/toast";
 // import vectorLogo from "../../../public/vectorLogo.jpg";
 
 export default function Login() {
   const router = useRouter();   
+  const toast = useToast();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -63,6 +65,7 @@ export default function Login() {
 
         // Redirect based on department
         const department = data?.user?.department;
+        toast.success('Login successful');
         if (department === 1) {
           router.push('/dashboard');
         } else if (department === 2) {
@@ -76,6 +79,8 @@ export default function Login() {
         }
       } catch (err) {
         setErrors({ form: err?.response?.data?.message || 'Login failed. Please try again.' });
+        const msg = err?.response?.data?.message || 'Login failed. Please try again.';
+        toast.error(msg);
       }
     } else {
       setErrors(validationErrors);
@@ -184,11 +189,7 @@ export default function Login() {
                 )}
               </div>
 
-              {errors.form && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.form}
-                </p>
-              )}
+              {/* Inline form error removed in favor of toast notifications */}
 
               <button
                 type="submit"

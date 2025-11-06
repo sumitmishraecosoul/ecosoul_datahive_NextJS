@@ -8,10 +8,12 @@ import { FaShoppingCart, FaWarehouse, FaTruckMoving, FaMoneyBillWave, FaChartLin
 import { getEcommerceOverviewMetricCardData, getEcommerceOverviewDIByGeography, getEcommerceOverviewData, getEcommerceAlertCountByGeography, getEcommerceSKUTypeByGeography, getEcommerceSKUCountByGeography, getEcommerceOverviewFilters } from '../../../api/ecommerce';
 import BarChart from '../../../Components/BarChart';
 import DEV_URL from '../../../config/config';
+import { useToast } from '../../../Components/toast';
 import { Us, De, Gb, Ca } from 'react-flags-select';
 
 
 export default function ECommercePage() {
+  const toast = useToast();
   const [filters, setFilters] = useState({ sku: '', material: '', monthYear: '',country: '', alert: '', skuType: '', status: '' });
   const [metricData, setMetricData] = useState({
     Demand: 0,
@@ -435,8 +437,10 @@ export default function ECommercePage() {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
+      toast.success('Download started');
     } catch (e) {
       console.error('Error downloading file:', e);
+      toast.error('Download failed. Please try again.');
     }
   };
 

@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react'
 import { CiFilter } from "react-icons/ci";
+import { useToast } from './toast';
 
 // Reusable filter selector
 // Props:
@@ -19,6 +20,7 @@ const FilterSelector = ({
   className = '',
 }) => {
   const [selectedFilters, setSelectedFilters] = useState({});
+  const toast = useToast();
 
   const handleFilterChange = (filterKey, selectedOption) => {
     const next = { ...selectedFilters, [filterKey]: selectedOption };
@@ -26,9 +28,10 @@ const FilterSelector = ({
     onChange?.(next);
   };
 
-  const handleClear = () => {
+  const handleClearWithToast = () => {
     setSelectedFilters({});
     onClear?.();
+    toast.info('Filters cleared');
   };
 
   return (
@@ -91,7 +94,7 @@ const FilterSelector = ({
             {Object.keys(selectedFilters).filter(key => selectedFilters[key]).length} filters applied
           </div>
           <button
-            onClick={handleClear}
+            onClick={handleClearWithToast}
             className='text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors'
           >
             Clear All Filters

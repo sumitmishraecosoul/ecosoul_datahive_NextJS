@@ -4,9 +4,11 @@ import MetricTable from '../../../../Components/MetricTable';
 import DownloadButton from '../../../../Components/DownloadButton';
 import { getEcommerceInventoryData } from '../../../../api/ecommerce';
 import DEV_URL from '../../../../config/config';
+import { useToast } from '../../../../Components/toast';
 
 export default function ECommerceInventoryPage() {
   const [rows, setRows] = React.useState([]);
+  const toast = useToast();
 
   const columns = [
     { label: 'SKU', renderCell: (item) => item['SKU'] || '' },
@@ -65,8 +67,10 @@ export default function ECommerceInventoryPage() {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
+      toast.success('Download started');
     } catch (error) {
       console.error('Error downloading file:', error);
+      toast.error('Download failed. Please try again.');
     }
   };
 

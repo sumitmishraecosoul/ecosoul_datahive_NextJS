@@ -5,11 +5,13 @@ import { CiSettings } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
 // import vectorLogo from "../../public/vectorLogo.jpg";
 import { logout as apiLogout } from '../api/auth';
+import { useToast } from './toast';
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const router = useRouter();
+    const toast = useToast();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -34,6 +36,8 @@ const Navbar = () => {
         router.push('/login');
         // Close dropdown
         setIsDropdownOpen(false);
+        // Toast feedback
+        toast.success('Logged out successfully');
     };
 
     const handleContactAdmin = () => {
