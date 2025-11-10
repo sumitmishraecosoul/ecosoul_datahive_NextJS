@@ -1,12 +1,11 @@
 import axios from 'axios';
-import DEV_URL from '../config/config.js';
 
 // Ensure axios sends cookies with requests (for cookie-based auth)
 axios.defaults.withCredentials = true;
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: DEV_URL,
+  baseURL: '/api',
   timeout: 50000,
   withCredentials: true,
   headers: {

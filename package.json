@@ -2,6 +2,7 @@
   "name": "ecosoul-datahive",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "next dev --turbopack --port 7600",
     "build": "next build --turbopack",
