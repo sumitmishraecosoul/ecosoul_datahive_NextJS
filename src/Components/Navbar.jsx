@@ -28,10 +28,11 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = async () => {
-        try { await apiLogout(); } catch {}
-        // Clear any stored authentication data
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
+        try { 
+            await apiLogout(); 
+        } catch {}
+        // Backend clears httpOnly cookies on logout endpoint
+        // Clear user data from localStorage (tokens are in httpOnly cookies, cleared by backend)
         localStorage.removeItem('user');
         // Navigate to login page
         router.push('/login');

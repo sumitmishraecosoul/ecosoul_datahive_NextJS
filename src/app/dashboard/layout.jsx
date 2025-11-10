@@ -12,9 +12,10 @@ export default function DashboardLayout({ children }) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const token = localStorage.getItem('token');
+    // Check if user data exists (tokens are in httpOnly cookies, not accessible from JS)
+    // If user data doesn't exist, user is not authenticated
     const userRaw = localStorage.getItem('user');
-    if (!token || !userRaw) {
+    if (!userRaw) {
       router.replace('/login');
       return;
     }

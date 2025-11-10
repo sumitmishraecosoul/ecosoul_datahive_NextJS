@@ -53,13 +53,8 @@ export default function Login() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const data = await loginApi({ email: formData.email, password: formData.password });
-        // Persist tokens and user for subsequent API calls and RBAC
-        if (data?.accessTokenHRMS) {
-          localStorage.setItem('token', data.accessTokenHRMS);
-        }
-        if (data?.refreshTokenHRMS) {
-          localStorage.setItem('refreshToken', data.refreshTokenHRMS);
-        }
+        // Backend sets httpOnly cookies automatically (accessToken, refreshToken)
+        // Only store user data in localStorage for UI state (not sensitive auth data)
         if (data?.user) {
           localStorage.setItem('user', JSON.stringify(data.user));
         }
