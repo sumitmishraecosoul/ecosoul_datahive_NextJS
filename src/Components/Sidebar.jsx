@@ -49,6 +49,7 @@ const Sidebar = () => {
         { id: 'ec-overview', label: 'Overview', href: '/dashboard/e-commerce' },
         { id: 'ec-pnl', label: 'PNL', href: '/dashboard/e-commerce/pnl' },
         { id: 'ec-inventory', label: 'Inventory', href: '/dashboard/e-commerce/inventory' },
+        { id: 'ec-salereturn', label: 'Sales & Returns', href: '/dashboard/e-commerce/sales-returns' },
       ]
     },
     {

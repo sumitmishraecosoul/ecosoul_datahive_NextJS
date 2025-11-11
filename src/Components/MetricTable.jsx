@@ -35,7 +35,7 @@ const MetricTable = ({ title, rows, columns, showSearch = true, scrollable = tru
   const [skuInput, setSkuInput] = useState('');
   const [appliedSku, setAppliedSku] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 25;
+  const pageSize = 28;
 
   const baseNodes = Array.isArray(rows) ? rows.map((item, index) => ({
     ...item,
