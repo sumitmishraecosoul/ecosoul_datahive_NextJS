@@ -80,12 +80,12 @@ export default function ChainStorePage() {
 
       {/* Two metric tables in one row (6 and 7 columns) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <MetricTable title="Retailer Vendor Cost Ordered by Shipped" rows={rows6} columns={sixCol} showSearch={false} />
-        <MetricTable title="Quantity Ordered vs Shipped" rows={rows7} columns={sevenCol} showSearch={false} />
+        <MetricTable title="Retailer Vendor Cost Ordered by Shipped" rows={rows6} columns={sixCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
+        <MetricTable title="Quantity Ordered vs Shipped" rows={rows7} columns={sevenCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
       </div>
 
       {/* One metric table with 10 columns below */}
-      <MetricTable title="Chain Store Detailed View" rows={rows10} columns={tenCol} showSearch={false} />
+      <MetricTable title="Chain Store Detailed View" rows={rows10} columns={tenCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
     </div>
   );
 }

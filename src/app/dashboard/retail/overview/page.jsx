@@ -56,13 +56,13 @@ export default function RetailOverviewPage() {
 
       {/* Three tables; try to keep in one row when possible */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <MetricTable title="Invoice Total % Deduction by Category" rows={rowsA} columns={twoCol} showSearch={false} />
-        <MetricTable title="Net Payable & Deduction by Category" rows={rowsB} columns={twoCol} showSearch={false} />
-        <MetricTable title="Invoice Amount by Category" rows={rowsC} columns={twoCol} showSearch={false} />
+        <MetricTable title="Invoice Total % Deduction by Category" rows={rowsA} columns={twoCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
+        <MetricTable title="Net Payable & Deduction by Category" rows={rowsB} columns={twoCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
+        <MetricTable title="Invoice Amount by Category" rows={rowsC} columns={twoCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
       </div>
 
       {/* Five column table */}
-      <MetricTable title="Retail Metrics" rows={rowsFive} columns={fiveCol} showSearch={false} />
+      <MetricTable title="Retail Metrics" rows={rowsFive} columns={fiveCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
     </div>
   );
 }

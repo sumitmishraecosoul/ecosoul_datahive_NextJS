@@ -44,7 +44,7 @@ export default function DemandAndSupplyWestPage() {
       />
 
       {/* Demand and Supply Table - West */}
-      <MetricTable title="Demand and Supply - West" rows={rows} columns={tableColumns} showSearch={false} />
+      <MetricTable title="Demand and Supply - West" rows={rows} columns={tableColumns} showSearch={false} titleClassName="text-lg font-semibold text-black" />
     </div>
   );
 }

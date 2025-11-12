@@ -43,6 +43,7 @@ export default function WalmartPage() {
                     { label: 'Value', renderCell: (item) => item.value || '-' },
                 ]}
                 showSearch={false}
+                titleClassName="text-lg font-semibold text-black"
             />
             <MetricTable
                 title="Weekly PO Trends"
@@ -56,6 +57,7 @@ export default function WalmartPage() {
                     { label: 'Col 6', renderCell: (item) => item.c6 || '-' },
                 ]}
                 showSearch={false}
+                titleClassName="text-lg font-semibold text-black"
             />
         </div>
 
@@ -64,6 +66,7 @@ export default function WalmartPage() {
                 title="Detailed View"
                 rows={[]}
                 columns={[]}
+                titleClassName="text-lg font-semibold text-black"
             />
         </div>
     </>

@@ -24,3 +24,27 @@ export const getKeheKSolveMetricTableData = async (params = {}) => {
   return response.data;
 };
 
+// Fetch Kehe Chain-Store filters
+export const getKeheCSFilters = async () => {
+  const response = await api.get('/retail/kehe-cs/filters');
+  return response.data;
+};
+
+// Fetch Kehe Chain-Store metric card data
+export const getKeheCSMetricCardData = async (params = {}) => {
+  const response = await api.get('/retail/kehe-cs/metric-card-data', { params });
+  return response.data;
+};
+
+// Fetch Kehe Chain-Store retailer vendor cost ordered by shipped
+export const getKeheCSRetailerVendorByShipped = async (params = {}) => {
+  const response = await api.get('/retail/kehe-cs/retailer-vendor-by-shipped', { params });
+  return response.data;
+};
+
+// Fetch Kehe Chain-Store quantity ordered vs shipped
+export const getKeheCSQuantityOrdered = async (params = {}) => {
+  const response = await api.get('/retail/kehe-cs/quantity-ordered', { params });
+  return response.data;
+};
+

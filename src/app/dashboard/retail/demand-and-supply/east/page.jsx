@@ -44,7 +44,7 @@ export default function DemandAndSupplyEastPage() {
       />
 
       {/* Demand and Supply Table - East */}
-      <MetricTable title="Demand and Supply - East" rows={rows} columns={tableColumns} showSearch={false} />
+      <MetricTable title="Demand and Supply - East" rows={rows} columns={tableColumns} showSearch={false} titleClassName="text-lg font-semibold text-black" />
     </div>
   );
 }

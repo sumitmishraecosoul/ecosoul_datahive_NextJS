@@ -74,10 +74,10 @@ export default function InventoryPage() {
       </div>
 
       {/* Inventory Table */}
-      <MetricTable title="Inventory at Risk" rows={rows} columns={tableColumns} showSearch={false} />
+      <MetricTable title="Inventory at Risk" rows={rows} columns={tableColumns} showSearch={false} titleClassName="text-lg font-semibold text-black" />
 
       {/* Second table below */}
-      <MetricTable title="Inventory Stock Status" rows={rows2} columns={tableColumns} showSearch={false} />
+      <MetricTable title="Inventory Stock Status" rows={rows2} columns={tableColumns} showSearch={false} titleClassName="text-lg font-semibold text-black" />
     </div>
   );
 }

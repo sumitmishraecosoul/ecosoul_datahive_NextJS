@@ -65,9 +65,9 @@ export default function AgeingPage() {
       </div>
 
       {/* Three tables in separate rows, each with 10 columns */}
-      <MetricTable title="Overview" rows={rows1} columns={tenCol} showSearch={false} />
-      <MetricTable title="DC by Inventory Aged & Vendor Cost" rows={rows2} columns={tenCol} showSearch={false} />
-      <MetricTable title="Inventory Aging by SKU across DC" rows={rows3} columns={tenCol} showSearch={false} />
+      <MetricTable title="Overview" rows={rows1} columns={tenCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
+      <MetricTable title="DC by Inventory Aged & Vendor Cost" rows={rows2} columns={tenCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
+      <MetricTable title="Inventory Aging by SKU across DC" rows={rows3} columns={tenCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
     </div>
   );
 }

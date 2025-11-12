@@ -31,7 +31,7 @@ const DEFAULT_COLUMNS = [
   },
 ];
 
-const MetricTable = ({ title, rows, columns, showSearch = true, scrollable = true }) => {
+const MetricTable = ({ title, rows, columns, showSearch = true, scrollable = true, titleClassName }) => {
   const [skuInput, setSkuInput] = useState('');
   const [appliedSku, setAppliedSku] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -162,7 +162,7 @@ const MetricTable = ({ title, rows, columns, showSearch = true, scrollable = tru
   return (
     <div className="flex flex-col gap-4 bg-white rounded-xl shadow-md p-4 w-full">
       <div>
-        <h1 className="text-2xl font-bold text-black mb-2">{title}</h1>
+        <h1 className={titleClassName ? `${titleClassName} mb-2` : "text-2xl font-bold text-black mb-2"}>{title}</h1>
       </div>
       {showSearch && (
         <>
