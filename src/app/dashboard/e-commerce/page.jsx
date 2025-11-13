@@ -94,12 +94,24 @@ export default function ECommercePage() {
     const simple = {};
     Object.keys(newFilters || {}).forEach((key) => {
       const v = newFilters[key];
-      simple[key] = typeof v === 'object' ? (v?.value || '') : (v || '');
+      if (Array.isArray(v) && v.length > 0) {
+        // Multi-select: convert array of objects to array of values
+        const values = v.map(item => typeof item === 'object' ? item.value : item).filter(Boolean);
+        if (values.length > 0) {
+          simple[key] = values;
+        }
+      } else if (v && !Array.isArray(v)) {
+        // Single select: convert object to value
+        const value = typeof v === 'object' ? (v?.value || '') : (v || '');
+        if (value) {
+          simple[key] = value;
+        }
+      }
     });
     setFilters(simple);
   };
 
-  const handleClear = () => setFilters({ sku: '', material: '', monthYear: '',country: '', alert: '', skuType: '', status: '' });
+  const handleClear = () => setFilters({});
 
   // Fetch metric card data
   useEffect(() => {
