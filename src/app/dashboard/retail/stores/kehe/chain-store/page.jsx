@@ -4,7 +4,7 @@ import FilterSelector from "../../../../../../Components/FilterSelector.jsx";
 import MetricCard from "../../../../../../Components/MetricCard.jsx";
 import MetricTable from "../../../../../../Components/MetricTable.jsx";
 import { FaShoppingCart, FaWarehouse, FaTruckMoving, FaMoneyBillWave, FaChartLine, FaBox, FaStore } from 'react-icons/fa';
-import { getKeheCSFilters, getKeheCSMetricCardData, getKeheCSRetailerVendorByShipped, getKeheCSQuantityOrdered } from '../../../../../../api/retail.js';
+import { getKeheCSFilters, getKeheCSMetricCardData, getKeheCSRetailerVendorByShipped, getKeheCSQuantityOrdered, getKeheCSMetricTableData } from '../../../../../../api/retail.js';
 import { useToast } from "../../../../../../Components/toast/ToastContext.jsx";
 
 export default function KeheChainStorePage() {
@@ -26,6 +26,15 @@ export default function KeheChainStorePage() {
     skuCount: '-',
   });
   const [loadingMetrics, setLoadingMetrics] = useState(false);
+
+  // Table data state
+  const [rows6, setRows6] = useState([]);
+  const [rows7, setRows7] = useState([]);
+  const [rows10, setRows10] = useState([]);
+  const [loadingTable1, setLoadingTable1] = useState(false);
+  const [loadingTable2, setLoadingTable2] = useState(false);
+  const [loadingTable3, setLoadingTable3] = useState(false);
+  const [table10Columns, setTable10Columns] = useState([]);
 
   const filterConfig = [
     { key: 'Month_Year', label: 'Month-Year', placeholder: 'All Month-Years' },
@@ -282,6 +291,103 @@ export default function KeheChainStorePage() {
     return () => { isMounted = false; };
   }, [filters, toast]);
 
+  // Load third table data (Metric Table Data)
+  useEffect(() => {
+    let isMounted = true;
+    const loadTable3 = async () => {
+      setLoadingTable3(true);
+      try {
+        const data = await getKeheCSMetricTableData(filters || {});
+        // Transform data to match table structure
+        let tableData = [];
+        let columnKeys = [];
+        
+        if (Array.isArray(data)) {
+          if (data.length > 0) {
+            // Get column keys from first row
+            const firstRow = data[0];
+            columnKeys = Object.keys(firstRow);
+            
+            // Transform each row to c1, c2, c3, etc. format
+            tableData = data.map((item, idx) => {
+              const row = { id: `row-${idx}` };
+              columnKeys.forEach((key, colIdx) => {
+                row[`c${colIdx + 1}`] = item[key] ?? '-';
+              });
+              return row;
+            });
+          }
+        } else if (data && typeof data === 'object') {
+          // Handle single object or object with array property
+          if (data.rows || data.data || data.items) {
+            const items = data.rows || data.data || data.items;
+            if (Array.isArray(items) && items.length > 0) {
+              const firstRow = items[0];
+              columnKeys = Object.keys(firstRow);
+              tableData = items.map((item, idx) => {
+                const row = { id: `row-${idx}` };
+                columnKeys.forEach((key, colIdx) => {
+                  row[`c${colIdx + 1}`] = item[key] ?? '-';
+                });
+                return row;
+              });
+            }
+          } else {
+            // Single object - convert to single row
+            columnKeys = Object.keys(data);
+            const row = { id: 'row-0' };
+            columnKeys.forEach((key, colIdx) => {
+              row[`c${colIdx + 1}`] = data[key] ?? '-';
+            });
+            tableData = [row];
+          }
+        }
+        
+        if (isMounted) {
+          setRows10(tableData);
+          // Generate column definitions dynamically
+          if (columnKeys.length > 0) {
+            const cols = columnKeys.map((key, idx) => ({
+              label: key,
+              renderCell: (item) => {
+                const value = item[`c${idx + 1}`];
+                // Format numbers if they look like numbers
+                if (typeof value === 'number') {
+                  return value.toLocaleString();
+                }
+                if (typeof value === 'string' && value !== '-' && value !== '' && !isNaN(Number(value)) && !isNaN(parseFloat(value))) {
+                  return Number(value).toLocaleString();
+                }
+                return value || '-';
+              }
+            }));
+            setTable10Columns(cols);
+          } else {
+            // Fallback to generic columns if no data
+            setTable10Columns(Array.from({ length: 10 }, (_, i) => ({
+              label: `Col ${i + 1}`,
+              renderCell: (item) => item[`c${i + 1}`] || '-',
+            })));
+          }
+        }
+      } catch (e) {
+        console.error('Error fetching metric table data:', e);
+        if (isMounted) {
+          setRows10([]);
+          setTable10Columns(Array.from({ length: 10 }, (_, i) => ({
+            label: `Col ${i + 1}`,
+            renderCell: (item) => item[`c${i + 1}`] || '-',
+          })));
+        }
+        toast.error('Failed to load metric table data');
+      } finally {
+        if (isMounted) setLoadingTable3(false);
+      }
+    };
+    loadTable3();
+    return () => { isMounted = false; };
+  }, [filters, toast]);
+
   // Seven metric cards (placeholder values; hook to API later)
   const metrics = [
     { title: 'Ordered (Vendor Cost)', value: loadingMetrics ? '...' : metricValues.orderedVendorCost, icon: <FaStore className="text-red-600" /> },
@@ -316,17 +422,11 @@ export default function KeheChainStorePage() {
     { label: 'Shipped (Qty)', renderCell: (item) => item.c6 || '-' },
     { label: 'Diff in Qty', renderCell: (item) => item.c7 || '-' },
   ];
-  const tenCol = Array.from({ length: 10 }, (_, i) => ({
+  // Use dynamic columns if available, otherwise fallback to generic
+  const tenCol = table10Columns.length > 0 ? table10Columns : Array.from({ length: 10 }, (_, i) => ({
     label: `Col ${i + 1}`,
     renderCell: (item) => item[`c${i + 1}`] || '-',
   }));
-
-  // Table data state
-  const [rows6, setRows6] = useState([]);
-  const [rows7, setRows7] = useState([]);
-  const [loadingTable1, setLoadingTable1] = useState(false);
-  const [loadingTable2, setLoadingTable2] = useState(false);
-  const rows10 = [];
 
   return (
     <div className="space-y-6">
@@ -352,7 +452,13 @@ export default function KeheChainStorePage() {
       </div>
 
       {/* One metric table with 10 columns below */}
-      <MetricTable title="Chain Store Detailed View" rows={rows10} columns={tenCol} showSearch={false} titleClassName="text-lg font-semibold text-black" />
+      <MetricTable 
+        title="Chain Store Detailed View" 
+        rows={rows10} 
+        columns={tenCol} 
+        showSearch={true} 
+        titleClassName="text-lg font-semibold text-black" 
+      />
     </div>
   );
 }

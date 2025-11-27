@@ -48,3 +48,9 @@ export const getKeheCSQuantityOrdered = async (params = {}) => {
   return response.data;
 };
 
+// Fetch Kehe Chain-Store metric table data
+export const getKeheCSMetricTableData = async (params = {}) => {
+  const response = await api.get('/retail/kehe-cs/metric-table-data', { params });
+  return response.data;
+};
+
