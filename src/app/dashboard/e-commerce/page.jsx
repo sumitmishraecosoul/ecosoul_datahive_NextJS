@@ -62,6 +62,7 @@ export default function ECommercePage() {
   const [skuTypeOptions, setSkuTypeOptions] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [monthYearOptions, setMonthYearOptions] = useState([]);
+  const [showFilters, setShowFilters] = useState(true);
 
   // Fetch filter options on mount
   useEffect(() => {
@@ -461,25 +462,35 @@ export default function ECommercePage() {
    
 
   <div className="space-y-6">
-      {/* Header with Download Button */}
+      {/* Header with Download & Filter Toggle Buttons */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">E-Commerce Overview</h1>
-        <Button 
-          onClick={handleDownload}
-          className="ml-4"
-          showDownloadIcon
-        >
-          Download CSV
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => setShowFilters((prev) => !prev)}
+            className="bg-white text-teal-600 border border-teal-200 shadow-none hover:bg-teal-50 hover:shadow-sm px-4 py-2"
+          >
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
+          </Button>
+          <Button 
+            onClick={handleDownload}
+            className="ml-1"
+            showDownloadIcon
+          >
+            Download CSV
+          </Button>
+        </div>
       </div>
 
-      <FilterSelector
-        title="Filters"
-        config={filterConfig}
-        options={{}}
-        onChange={handleFilterChange}
-        onClear={handleClear}
-      />
+      {showFilters && (
+        <FilterSelector
+          title="Filters"
+          config={filterConfig}
+          options={{}}
+          onChange={handleFilterChange}
+          onClear={handleClear}
+        />
+      )}
  <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-red-400 border-2">
     <h2 className="text-lg font-semibold text-black">Key Metrics</h2>
   </div>

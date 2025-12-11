@@ -12,6 +12,7 @@ export default function SupplyChainPage() {
   const [metrics, setMetrics] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   // Filter configuration for the FilterSelector
   const filterConfig = [
@@ -208,26 +209,36 @@ export default function SupplyChainPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Download Button */}
+      {/* Header with Download & Filter Toggle Buttons */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Supply Chain Overview</h1>
-        <Button 
-          onClick={handleDownload}
-          className="ml-4"
-          showDownloadIcon
-        >
-          Download CSV
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => setShowFilters((prev) => !prev)}
+            className="bg-white text-teal-600 border border-teal-200 shadow-none hover:bg-teal-50 hover:shadow-sm px-4 py-2"
+          >
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
+          </Button>
+          <Button 
+            onClick={handleDownload}
+            className="ml-1"
+            showDownloadIcon
+          >
+            Download CSV
+          </Button>
+        </div>
       </div>
 
       {/* Inventory Filters */}
-      <FilterSelector 
-        title="Inventory Filters"
-        config={filterConfig}
-        options={{}}
-        onChange={handleFilterChange}
-        onClear={() => setFilters({ sku: '' })}
-      />
+      {showFilters && (
+        <FilterSelector 
+          title="Inventory Filters"
+          config={filterConfig}
+          options={{}}
+          onChange={handleFilterChange}
+          onClear={() => setFilters({ sku: '' })}
+        />
+      )}
 
       {/* Stock Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

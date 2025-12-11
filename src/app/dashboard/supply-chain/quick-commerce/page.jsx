@@ -40,6 +40,7 @@ export default function QuickCommercePage() {
   const [locationOptions, setLocationOptions] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   // Filter configuration for the FilterSelector
   const filterConfig = [
@@ -352,26 +353,36 @@ export default function QuickCommercePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Download Button */}
+      {/* Header with Download & Filter Toggle Buttons */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Quick Commerce</h1>
-        <Button 
-          onClick={handleDownload}
-          className="ml-4"
-          showDownloadIcon
-        >
-          Download CSV
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => setShowFilters((prev) => !prev)}
+            className="bg-white text-teal-600 border border-teal-200 shadow-none hover:bg-teal-50 hover:shadow-sm px-4 py-2"
+          >
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
+          </Button>
+          <Button 
+            onClick={handleDownload}
+            className="ml-1"
+            showDownloadIcon
+          >
+            Download CSV
+          </Button>
+        </div>
       </div>
 
       {/* Filters Section */}
-      <FilterSelector 
-        title="Filters"
-        config={filterConfig}
-        options={{}}
-        onChange={handleFilterChange}
-        onClear={() => setFilters({ sku: '', location: '' })}
-      />
+      {showFilters && (
+        <FilterSelector 
+          title="Filters"
+          config={filterConfig}
+          options={{}}
+          onChange={handleFilterChange}
+          onClear={() => setFilters({ sku: '', location: '' })}
+        />
+      )}
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">

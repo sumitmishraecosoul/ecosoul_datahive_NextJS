@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 const TabSelector = ({ 
-  tabs = ['Overview','Quick Commerce'], 
+  tabs = [''], 
   onTabChange,
   defaultActiveTab = 0 
 }) => {

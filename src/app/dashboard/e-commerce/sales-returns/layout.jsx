@@ -17,9 +17,9 @@ export default function SalesReturnsLayout({ children }) {
   };
   return (
     <>
-    <div>
+    {/* <div>
       <h1 className='text-2xl font-bold text-black mb-5'>Sales & Returns</h1>
-    </div>
+    </div> */}
     <div>
       <TabSelector
         tabs={tabs}

@@ -153,7 +153,7 @@ const FilterSelector = ({
 
   return (
     <div className={`bg-white p-6 rounded-lg shadow-lg border border-gray-200 ${className}`}>
-      <div className='flex flex-row items-center gap-3 mb-6'>
+      <div className='flex flex-row items-center gap-3 mb-4'>
         <div className='p-2 bg-blue-50 rounded-lg'>
           <CiFilter size={24} color='#3b82f6' />
         </div>
